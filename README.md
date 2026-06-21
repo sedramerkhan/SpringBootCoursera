@@ -1,0 +1,57 @@
+# Coursera — Spring Boot Learning Project
+
+A practice project for learning Spring Boot, built with Maven and Kotlin/Java.
+
+## Study Notes
+
+Concise references written while working through the course:
+
+- [Spring Beans](docs/beans-notes.md) — what a "bean" is: an object whose
+  lifecycle Spring manages and injects for you (IoC).
+- [Auto-Configuration](docs/auto-configuration-notes.md) — how Spring Boot
+  auto-wires beans, where the configs live, and the `@Conditional...` rules
+  that activate them.
+- [DispatcherServlet & Request Flow](docs/dispatcher-servlet-notes.md) — how an
+  HTTP request travels through the front controller to your controller and back.
+- [DevTools](docs/devtools-notes.md) — automatic application restart on code or
+  property changes during development.
+- [Profiles](docs/profiles-notes.md) — environment-specific configuration
+  (dev/test/prod) via profile files and `@Profile` beans.
+- [@ConfigurationProperties](docs/configuration-properties-notes.md) — binding a
+  group of external properties onto a typed config class by prefix.
+- [Actuator](docs/actuator-notes.md) — production-ready monitoring endpoints
+  (health, metrics, env…) and how to expose them.
+
+## Running the app
+
+```bash
+# Windows
+mvnw.cmd spring-boot:run
+
+# macOS / Linux
+./mvnw spring-boot:run
+```
+
+The app starts on `http://localhost:8080` by default.
+
+### Useful flags
+
+- `--debug` — prints the **auto-configuration report** (positive/negative
+  matches), handy for seeing exactly what Spring Boot configured and why.
+
+## Project layout
+
+```
+src/main/java/com/sm/coursera/
+├── CourseraApplication.java   # @SpringBootApplication entry point
+└── CourseController.kt        # REST controller
+
+src/main/resources/
+└── application.yaml           # configuration
+
+docs/                          # study notes (see above)
+```
+
+## More
+
+See [HELP.md](HELP.md) for the generated Spring Boot reference links.
