@@ -19,7 +19,7 @@ class AuthService {
     // trim() guards against stray leading/trailing whitespace from the input
     // (autofill, copy-paste). "Sedra " would otherwise fail to match "Sedra".
     fun isValid(name: String, password: String): Boolean =
-        name.trim().lowercase() == VALID_NAME && password.trim() == VALID_PASSWORD
+        name.trim().equals(VALID_NAME, ignoreCase = true) && password.trim() == VALID_PASSWORD
 
     companion object {
         private const val VALID_NAME = "Sedra"

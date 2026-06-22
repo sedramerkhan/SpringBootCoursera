@@ -6,6 +6,7 @@ import org.springframework.ui.ModelMap
 import org.springframework.web.bind.annotation.GetMapping
 import org.springframework.web.bind.annotation.PostMapping
 import org.springframework.web.bind.annotation.RequestParam
+import org.springframework.web.bind.annotation.SessionAttributes
 
 /**
  * Two-page demo: a login form and a welcome screen that echoes the input.
@@ -18,6 +19,10 @@ import org.springframework.web.bind.annotation.RequestParam
  * whether the credentials are valid — the controller just handles HTTP.
  */
 @Controller
+// Whenever "name" is added to the model in this controller, Spring also stores
+// it in the HTTP session. TodoController then reads it back with
+// @SessionAttribute so the user's name follows them across pages.
+@SessionAttributes("name")
 class AuthController(
     private val authService: AuthService,
 ) {
@@ -49,7 +54,10 @@ class AuthController(
                 name, name.length, password.length,
             )
             model.addAttribute("error", "Invalid name or password. Please try again.")
-            model.addAttribute("name", name) // keep the typed name in the field
+            // Use "enteredName" (not "name") to repopulate the field: "name" is
+            // a @SessionAttributes key, so storing it here would wrongly put an
+            // invalid name in the session.
+            model.addAttribute("enteredName", name)
             return "auth/login"
         }
 

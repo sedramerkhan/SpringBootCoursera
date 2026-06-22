@@ -28,7 +28,10 @@
             real apps never display or store passwords in plain text.
         </p>
 
-        <a class="link" href="/login">&larr; Back to login</a>
+        <div style="margin-top:1.5rem; display:flex; gap:1.25rem; align-items:center;">
+            <a class="btn" href="/todos" style="text-decoration:none; text-align:center;">View my todos</a>
+            <a class="link" href="/login" style="margin-top:0;">&larr; Back to login</a>
+        </div>
     </div>
 </body>
 </html>

@@ -23,7 +23,7 @@
             <div class="form-group">
                 <label for="name">Name</label>
                 <input class="field" type="text" id="name" name="name"
-                       value="${name}" placeholder="Your name" required autofocus>
+                       value="${enteredName}" placeholder="Your name" required autofocus>
             </div>
 
             <div class="form-group">
