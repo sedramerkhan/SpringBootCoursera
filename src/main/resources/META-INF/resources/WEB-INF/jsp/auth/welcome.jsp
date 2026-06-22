@@ -1,0 +1,34 @@
+<%@ page contentType="text/html;charset=UTF-8" language="java" %>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Welcome</title>
+    <link rel="stylesheet" href="/css/app.css">
+</head>
+<body>
+    <div class="card">
+        <span class="pill">Signed in</span>
+        <h1 class="card__title" style="margin-top:.75rem;">Hello, ${name}!</h1>
+        <p class="card__subtitle">Here is what you submitted on the login form.</p>
+
+        <!-- ${name} / ${password} come from the ModelMap in AuthController. -->
+        <div class="kv">
+            <span class="kv__key">Name</span>
+            <span class="kv__value">${name}</span>
+        </div>
+        <div class="kv">
+            <span class="kv__key">Password</span>
+            <span class="kv__value">${password}</span>
+        </div>
+
+        <p class="muted" style="margin-top:1rem;">
+            Note: showing a password back on screen is for this demo only —
+            real apps never display or store passwords in plain text.
+        </p>
+
+        <a class="link" href="/login">&larr; Back to login</a>
+    </div>
+</body>
+</html>

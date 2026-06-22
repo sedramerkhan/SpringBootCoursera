@@ -1,0 +1,159 @@
+/* ==========================================================================
+   app.css — small reusable stylesheet for the JSP views.
+
+   Organised so you can reuse the pieces on any page:
+     1. Design tokens   (colors, spacing, radius — change the theme in one place)
+     2. Base / background
+     3. Card             (.card — a centered surface for forms & content)
+     4. Forms            (.form, .form-group, .field, .btn)
+     5. Helpers          (.muted, .stack, .pill)
+   ========================================================================== */
+
+/* 1. Design tokens ---------------------------------------------------------
+   CSS custom properties: set a value once here, use it everywhere below.
+   Want a different look? Tweak these and the whole site follows.            */
+:root {
+    --brand:        #6366f1;   /* indigo  */
+    --brand-dark:   #4f46e5;
+    --bg-from:      #6366f1;   /* background gradient start */
+    --bg-to:        #8b5cf6;   /* background gradient end   */
+    --surface:      #ffffff;
+    --text:         #1e293b;
+    --text-muted:   #64748b;
+    --border:       #e2e8f0;
+    --danger:       #dc2626;
+
+    --radius:       14px;
+    --radius-sm:    8px;
+    --gap:          1rem;
+    --shadow:       0 10px 30px rgba(15, 23, 42, .18);
+}
+
+/* 2. Base / background ----------------------------------------------------- */
+* { box-sizing: border-box; }
+
+body {
+    margin: 0;
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 1.5rem;
+    font-family: system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+    color: var(--text);
+    /* Reusable gradient background */
+    background: linear-gradient(135deg, var(--bg-from), var(--bg-to));
+}
+
+/* 3. Card — a centered surface you can drop any content into ---------------- */
+.card {
+    width: 100%;
+    max-width: 400px;
+    background: var(--surface);
+    border-radius: var(--radius);
+    box-shadow: var(--shadow);
+    padding: 2.25rem;
+}
+
+.card__title {
+    margin: 0 0 .35rem;
+    font-size: 1.6rem;
+}
+
+.card__subtitle {
+    margin: 0 0 1.75rem;
+    color: var(--text-muted);
+    font-size: .95rem;
+}
+
+/* 4. Forms ------------------------------------------------------------------ */
+.form { display: flex; flex-direction: column; gap: var(--gap); }
+
+.form-group { display: flex; flex-direction: column; gap: .4rem; }
+
+.form-group label {
+    font-size: .85rem;
+    font-weight: 600;
+    color: var(--text-muted);
+}
+
+.field {
+    width: 100%;
+    padding: .7rem .85rem;
+    font-size: 1rem;
+    color: var(--text);
+    background: #f8fafc;
+    border: 1px solid var(--border);
+    border-radius: var(--radius-sm);
+    transition: border-color .15s, box-shadow .15s;
+}
+.field:focus {
+    outline: none;
+    border-color: var(--brand);
+    box-shadow: 0 0 0 3px rgba(99, 102, 241, .18);
+    background: #fff;
+}
+
+.btn {
+    margin-top: .5rem;
+    padding: .8rem 1rem;
+    font-size: 1rem;
+    font-weight: 600;
+    color: #fff;
+    background: var(--brand);
+    border: none;
+    border-radius: var(--radius-sm);
+    cursor: pointer;
+    transition: background .15s, transform .05s;
+}
+.btn:hover  { background: var(--brand-dark); }
+.btn:active { transform: translateY(1px); }
+
+/* 5. Helpers ---------------------------------------------------------------- */
+.stack > * + * { margin-top: .75rem; }        /* vertical rhythm */
+
+.muted { color: var(--text-muted); font-size: .9rem; }
+
+.pill {
+    display: inline-block;
+    padding: .25rem .7rem;
+    border-radius: 999px;
+    background: #eef2ff;
+    color: var(--brand-dark);
+    font-size: .8rem;
+    font-weight: 600;
+}
+
+/* A labelled value row, used on the welcome page to echo the inputs */
+.kv {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 1rem;
+    padding: .75rem 0;
+    border-bottom: 1px solid var(--border);
+}
+.kv:last-of-type { border-bottom: none; }
+.kv__key   { color: var(--text-muted); font-size: .85rem; font-weight: 600; }
+.kv__value { font-weight: 600; word-break: break-all; }
+
+.link {
+    display: inline-block;
+    margin-top: 1.5rem;
+    color: var(--brand-dark);
+    text-decoration: none;
+    font-weight: 600;
+}
+.link:hover { text-decoration: underline; }
+
+/* Error banner — shown above a form when validation fails */
+.alert {
+    padding: .7rem .9rem;
+    margin-bottom: 1.25rem;
+    border-radius: var(--radius-sm);
+    background: #fef2f2;
+    border: 1px solid #fecaca;
+    color: var(--danger);
+    font-size: .9rem;
+    font-weight: 500;
+}
