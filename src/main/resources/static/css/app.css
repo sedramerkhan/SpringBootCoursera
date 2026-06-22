@@ -180,6 +180,15 @@ body {
 .badge--done    { background: #dcfce7; color: #15803d; }
 .badge--pending { background: #fef9c3; color: #a16207; }
 
+/* Inline field validation message — shown under a form field by <form:errors> */
+.field-error {
+    display: block;
+    margin-top: .3rem;
+    color: var(--danger);
+    font-size: .8rem;
+    font-weight: 500;
+}
+
 /* Error banner — shown above a form when validation fails */
 .alert {
     padding: .7rem .9rem;

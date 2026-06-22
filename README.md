@@ -27,6 +27,12 @@ Concise references written while working through the course:
 - [JSP & View Resolver](docs/jsp-notes.md) — server-rendered HTML views: how a
   controller returns a view name and the resolver's prefix/suffix turn it into a
   JSP file.
+- [Spring MVC Forms](docs/spring-mvc-forms-notes.md) — command beans, two-way
+  binding with the `<form:…>` tags, and server-side validation (`@Valid`,
+  `@Size`, `BindingResult`, `<form:errors>`) — plus the Kotlin specifics.
+- [Model & @SessionAttributes](docs/session-attributes-notes.md) — passing data
+  controller → view via the request-scoped `Model`, and keeping a value (the
+  logged-in name) across requests with `@SessionAttributes` / `@SessionAttribute`.
 
 ## Running the app
 
