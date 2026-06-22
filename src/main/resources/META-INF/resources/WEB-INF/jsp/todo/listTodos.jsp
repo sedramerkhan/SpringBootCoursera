@@ -1,5 +1,6 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
-<%@ page import="com.sm.coursera.todo.Todo, java.util.List" %>
+<%-- JSTL core tags. The jakarta.* uri matches the Jakarta EE JSTL dependency. --%>
+<%@ taglib prefix="c" uri="jakarta.tags.core" %>
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -25,22 +26,25 @@
                 </tr>
             </thead>
             <tbody>
-                <%-- The model attribute "todos" is a List<Todo> from TodoController.
-                     A scriptlet loop renders one row per item (no JSTL needed). --%>
-                <% for (Todo todo : (List<Todo>) request.getAttribute("todos")) { %>
+                <%-- "todos" is the List<Todo> from TodoController. c:forEach
+                     renders one row per item; EL reads each property. --%>
+                <c:forEach var="todo" items="${todos}">
                     <tr>
-                        <td><%= todo.getId() %></td>
-                        <td><%= todo.getDescription() %></td>
-                        <td><%= todo.getTargetDate() %></td>
+                        <td>${todo.id}</td>
+                        <td><c:out value="${todo.description}"/></td>
+                        <td>${todo.targetDate}</td>
                         <td>
-                            <% if (todo.getDone()) { %>
-                                <span class="badge badge--done">Done</span>
-                            <% } else { %>
-                                <span class="badge badge--pending">Pending</span>
-                            <% } %>
+                            <c:choose>
+                                <c:when test="${todo.done}">
+                                    <span class="badge badge--done">Done</span>
+                                </c:when>
+                                <c:otherwise>
+                                    <span class="badge badge--pending">Pending</span>
+                                </c:otherwise>
+                            </c:choose>
                         </td>
                     </tr>
-                <% } %>
+                </c:forEach>
             </tbody>
         </table>
 

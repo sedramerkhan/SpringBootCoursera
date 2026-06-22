@@ -53,6 +53,18 @@
             <scope>provided</scope>
         </dependency>
 
+        <!-- JSTL (Jakarta EE 10): the c:forEach / c:if tags used in the JSPs.
+             jakarta.* namespace + taglib uri "jakarta.tags.core" — NOT the old
+             javax JSTL, which won't work in a Jakarta app. -->
+        <dependency>
+            <groupId>jakarta.servlet.jsp.jstl</groupId>
+            <artifactId>jakarta.servlet.jsp.jstl-api</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.glassfish.web</groupId>
+            <artifactId>jakarta.servlet.jsp.jstl</artifactId>
+        </dependency>
+
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-webmvc-test</artifactId>
