@@ -48,7 +48,10 @@
             </tbody>
         </table>
 
-        <a class="link" href="/login">&larr; Sign out</a>
+        <div style="margin-top:1.5rem; display:flex; gap:1.25rem; align-items:center;">
+            <a class="btn" href="/todos/add" style="text-decoration:none; text-align:center;">+ Add todo</a>
+            <a class="link" href="/login" style="margin-top:0;">&larr; Sign out</a>
+        </div>
     </div>
 </body>
 </html>
