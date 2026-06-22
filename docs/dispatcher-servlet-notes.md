@@ -9,8 +9,16 @@ back.
 for the app and delegates the work to the right components. This is the
 **Front Controller** pattern: one entry point coordinates everything.
 
+It **coordinates** — routes requests and calls helpers — but holds **no
+business logic** of its own; that lives in your controllers and services.
+
 It is created for you by `DispatcherServletAutoConfiguration` (in
-`spring-boot-webmvc.jar`) — you never register it manually.
+`spring-boot-webmvc.jar`) — Spring Boot auto-configures it when the web starter
+is present, so you never register it manually.
+
+**Analogy:** a receptionist — sends each visitor (request) to the right
+department (controller), then makes sure they leave with what they came for
+(response).
 
 ## The request lifecycle
 

@@ -6,6 +6,9 @@ A practice project for learning Spring Boot, built with Maven and Kotlin/Java.
 
 Concise references written while working through the course:
 
+- [Spring vs Spring MVC vs Spring Boot](docs/spring-stack-notes.md) — how the
+  three layers relate (core IoC container → web module → auto-configured
+  turnkey assembly) and the Starters that bundle them.
 - [Spring Beans](docs/beans-notes.md) — what a "bean" is: an object whose
   lifecycle Spring manages and injects for you (IoC).
 - [Auto-Configuration](docs/auto-configuration-notes.md) — how Spring Boot
@@ -21,6 +24,9 @@ Concise references written while working through the course:
   group of external properties onto a typed config class by prefix.
 - [Actuator](docs/actuator-notes.md) — production-ready monitoring endpoints
   (health, metrics, env…) and how to expose them.
+- [JSP & View Resolver](docs/jsp-notes.md) — server-rendered HTML views: how a
+  controller returns a view name and the resolver's prefix/suffix turn it into a
+  JSP file.
 
 ## Running the app
 
