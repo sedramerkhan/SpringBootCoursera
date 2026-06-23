@@ -51,8 +51,11 @@
                                     </svg>
                                 </a>
 
-                                <%-- Delete changes state, so a POST form (not a GET link). --%>
+                                <%-- Delete changes state, so a POST form (not a GET link).
+                                     Plain HTML form, so the CSRF token is added by hand
+                                     (the <form:form> tags do it automatically). --%>
                                 <form action="/todos/${todo.id}/delete" method="post" style="margin:0;">
+                                    <input type="hidden" name="${_csrf.parameterName}" value="${_csrf.token}"/>
                                     <button type="submit" class="btn-icon btn-icon--danger"
                                             aria-label="Delete todo" title="Delete">
                                         <%-- Inline SVG trash icon — no icon library needed. --%>

@@ -58,3 +58,10 @@
     font-size: .9rem;
     font-weight: 500;
 }
+
+/* Neutral/success variant — e.g. the "logged out" notice on the login page */
+.alert--ok {
+    background: #f0fdf4;
+    border-color: #bbf7d0;
+    color: #15803d;
+}

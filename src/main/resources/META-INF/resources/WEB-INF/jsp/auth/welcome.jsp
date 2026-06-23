@@ -4,26 +4,14 @@
     <div class="card">
         <span class="pill">Signed in</span>
         <h1 class="card__title" style="margin-top:.75rem;">Hello, ${name}!</h1>
-        <p class="card__subtitle">Here is what you submitted on the login form.</p>
+        <p class="card__subtitle">You are signed in with Spring Security.</p>
 
-        <!-- ${name} / ${password} come from the ModelMap in AuthController. -->
-        <div class="kv">
-            <span class="kv__key">Name</span>
-            <span class="kv__value">${name}</span>
-        </div>
-        <div class="kv">
-            <span class="kv__key">Password</span>
-            <span class="kv__value">${password}</span>
-        </div>
+        <%-- ${name} is the authenticated principal, added by AuthController.
+             We no longer have (or show) the raw password — Spring Security
+             only ever sees its hash. --%>
 
-        <p class="muted" style="margin-top:1rem;">
-            Note: showing a password back on screen is for this demo only —
-            real apps never display or store passwords in plain text.
-        </p>
-
-        <div style="margin-top:1.5rem; display:flex; gap:1.25rem; align-items:center;">
+        <div style="margin-top:1.5rem;">
             <a class="btn" href="/todos" style="text-decoration:none; text-align:center;">View my todos</a>
-            <a class="link" href="/login" style="margin-top:0;">&larr; Back to login</a>
         </div>
     </div>
 <%@ include file="../common/footer.jspf" %>

@@ -36,6 +36,15 @@
 }
 .navbar__link:hover { color: var(--brand); }
 
+/* A <button> that should look like a nav link (used for the logout POST form) */
+.navbar__link--button {
+    background: none;
+    border: none;
+    padding: 0;
+    cursor: pointer;
+    font-family: inherit;
+}
+
 .navbar__user {
     color: var(--text);
     font-weight: 600;

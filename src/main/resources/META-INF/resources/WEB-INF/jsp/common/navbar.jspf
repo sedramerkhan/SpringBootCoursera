@@ -18,6 +18,14 @@
 
     <ul class="navbar__nav navbar__nav--right">
         <li class="navbar__user">${name}</li>
-        <li><a class="navbar__link" href="/logout">Logout</a></li>
+        <%-- Spring Security's logout is a POST (a GET link could be triggered by
+             a crawler/prefetch). The button is styled to look like the other
+             nav links; the _csrf token is required because CSRF is on. --%>
+        <li>
+            <form action="/logout" method="post" style="display:inline; margin:0;">
+                <input type="hidden" name="${_csrf.parameterName}" value="${_csrf.token}"/>
+                <button type="submit" class="navbar__link navbar__link--button">Logout</button>
+            </form>
+        </li>
     </ul>
 </nav>

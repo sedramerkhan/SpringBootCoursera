@@ -9,14 +9,16 @@ import org.springframework.web.bind.annotation.GetMapping
 import org.springframework.web.bind.annotation.ModelAttribute
 import org.springframework.web.bind.annotation.PathVariable
 import org.springframework.web.bind.annotation.PostMapping
-import org.springframework.web.bind.annotation.SessionAttribute
+import java.security.Principal
 import java.time.LocalDate
 
 /**
  * Lists the logged-in user's todos and lets them add new ones.
  *
- * The username is read from the HTTP session with @SessionAttribute (it was put
- * there at login by AuthController's @SessionAttributes("name")).
+ * The username comes from the authenticated principal supplied by Spring
+ * Security (java.security.Principal). Because every /todos** URL requires
+ * authentication (see SpringSecurityConfiguration), principal is always
+ * present here — no manual "redirect to login if missing" checks are needed.
  *
  * The add form uses a Todo command bean for two-way binding + validation.
  */
@@ -28,15 +30,8 @@ class TodoController(
     private val logger = LoggerFactory.getLogger(javaClass)
 
     @GetMapping("/todos")
-    fun listTodos(
-        @SessionAttribute(name = "name", required = false) username: String?,
-        model: ModelMap,
-    ): String {
-        if (username.isNullOrBlank()) {
-            logger.debug("/todos hit with no session name -> redirecting to login")
-            return "redirect:/login"
-        }
-
+    fun listTodos(principal: Principal, model: ModelMap): String {
+        val username = principal.name
         model.addAttribute("name", username)
         model.addAttribute("todos", todoService.findByUsername(username))
         return "todo/listTodos"
@@ -46,11 +41,8 @@ class TodoController(
     // sensible defaults; the form fields are pre-filled from it (binding,
     // direction 1: bean -> form). Without this bean the <form:form> tag fails.
     @GetMapping("/todos/add")
-    fun showAddTodo(
-        @SessionAttribute(name = "name", required = false) username: String?,
-        model: ModelMap,
-    ): String {
-        if (username.isNullOrBlank()) return "redirect:/login"
+    fun showAddTodo(principal: Principal, model: ModelMap): String {
+        val username = principal.name
         model.addAttribute("name", username)
         model.addAttribute("todo", Todo(username = username, targetDate = LocalDate.now().plusYears(1)))
         return "todo/addTodo"
@@ -63,12 +55,12 @@ class TodoController(
     // save and redirect (PRG) so a refresh won't re-submit.
     @PostMapping("/todos/add")
     fun addTodo(
-        @SessionAttribute(name = "name", required = false) username: String?,
+        principal: Principal,
         @Valid @ModelAttribute("todo") todo: Todo,
         result: BindingResult,
         model: ModelMap,
     ): String {
-        if (username.isNullOrBlank()) return "redirect:/login"
+        val username = principal.name
 
         if (result.hasErrors()) {
             logger.debug("add todo validation failed: {} error(s)", result.errorCount)
@@ -76,7 +68,7 @@ class TodoController(
             return "todo/addTodo"
         }
 
-        todo.username = username // trust the session, not a client-supplied field
+        todo.username = username // trust the principal, not a client-supplied field
         todoService.addTodo(todo)
         logger.debug("added todo for {}: {}", username, todo.description)
         return "redirect:/todos"
@@ -87,11 +79,11 @@ class TodoController(
     // real todo instead of a blank one.
     @GetMapping("/todos/{id}/edit")
     fun showEditTodo(
-        @SessionAttribute(name = "name", required = false) username: String?,
+        principal: Principal,
         @PathVariable id: Int,
         model: ModelMap,
     ): String {
-        if (username.isNullOrBlank()) return "redirect:/login"
+        val username = principal.name
         val todo = todoService.findById(id, username) ?: return "redirect:/todos"
         model.addAttribute("name", username)
         model.addAttribute("todo", todo)
@@ -102,13 +94,13 @@ class TodoController(
     // binding/validation rules as add; BindingResult must follow the bean.
     @PostMapping("/todos/{id}/update")
     fun updateTodo(
-        @SessionAttribute(name = "name", required = false) username: String?,
+        principal: Principal,
         @PathVariable id: Int,
         @Valid @ModelAttribute("todo") todo: Todo,
         result: BindingResult,
         model: ModelMap,
     ): String {
-        if (username.isNullOrBlank()) return "redirect:/login"
+        val username = principal.name
 
         if (result.hasErrors()) {
             logger.debug("update todo validation failed: {} error(s)", result.errorCount)
@@ -116,7 +108,7 @@ class TodoController(
             return "todo/editTodo"
         }
 
-        todo.id = id                 // trust the path + session, not client fields
+        todo.id = id                 // trust the path + principal, not client fields
         todo.username = username
         todoService.updateTodo(todo)
         logger.debug("updated todo id={} for {}", id, username)
@@ -126,13 +118,13 @@ class TodoController(
     //The annotation has to match the method the browser actually sends, and an HTML form can only send GET or POST
     // POST /todos/{id}/delete -> remove the row, then redirect back to the list
     // (PRG). POST (not a GET link) so a crawler/prefetch can't delete a todo.
-    // Deletion is scoped to the logged-in user by passing the session name.
+    // Deletion is scoped to the logged-in user by passing the principal name.
     @PostMapping("/todos/{id}/delete")
     fun deleteTodo(
-        @SessionAttribute(name = "name", required = false) username: String?,
+        principal: Principal,
         @PathVariable id: Int,
     ): String {
-        if (username.isNullOrBlank()) return "redirect:/login"
+        val username = principal.name
         val removed = todoService.deleteById(id, username)
         logger.debug("delete todo id={} for {} -> removed={}", id, username, removed)
         return "redirect:/todos"
