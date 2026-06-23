@@ -33,6 +33,10 @@ Concise references written while working through the course:
 - [Model & @SessionAttributes](docs/session-attributes-notes.md) — passing data
   controller → view via the request-scoped `Model`, and keeping a value (the
   logged-in name) across requests with `@SessionAttributes` / `@SessionAttribute`.
+- [Spring Security](docs/spring-security-notes.md) — authentication and
+  authorization with `spring-boot-starter-security`: an in-memory user, BCrypt
+  password hashing, URL rules and form login/logout, CSRF tokens, and the
+  dispatcher-type fix for JSP forwards.
 
 ## Running the app
 
