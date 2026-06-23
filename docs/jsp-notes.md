@@ -90,6 +90,49 @@ Embedded Tomcat needs the JSP engine on the classpath:
 </dependency>
 ```
 
+## JSTL — tags instead of Java in the page
+
+**JSP is the page technology; JSTL (JSP Standard Tag Library) is an optional
+add-on** of ready-made tags so you can loop, branch, and format **without writing
+raw Java** (`<% ... %>` scriptlets, which are considered legacy/bad practice).
+
+JSTL is **not built in** — add the dependency. Because this is a Jakarta EE app
+(Spring Boot), use the **`jakarta.*`** artifacts, not the old `javax` ones:
+
+```xml
+<dependency>
+    <groupId>jakarta.servlet.jsp.jstl</groupId>
+    <artifactId>jakarta.servlet.jsp.jstl-api</artifactId>   <!-- the tags/API -->
+</dependency>
+<dependency>
+    <groupId>org.glassfish.web</groupId>
+    <artifactId>jakarta.servlet.jsp.jstl</artifactId>        <!-- the implementation -->
+</dependency>
+```
+
+Then declare the taglib at the top of the JSP (the **`jakarta.tags.core`** URI —
+mixing the old `javax` JSTL with a Jakarta app is a common "tag not working"
+cause) and use the tags:
+
+```jsp
+<%@ taglib prefix="c" uri="jakarta.tags.core" %>
+
+<c:forEach var="todo" items="${todos}">
+    <tr><td><c:out value="${todo.description}"/></td></tr>
+</c:forEach>
+
+<c:if test="${not empty error}">${error}</c:if>
+```
+
+- `<c:forEach>` replaces a Java `for` loop; `<c:if>` / `<c:choose>` replace `if`.
+- `<c:out>` escapes HTML by default (safer than `${...}` for user input).
+
+> **Not the same as the Spring form taglib.** JSTL (`jakarta.tags.core`) is for
+> general loops/conditionals. The Spring form tags
+> (`uri="http://www.springframework.org/tags/form"`, prefix `form`) are a
+> *separate* library for two-way form binding — see
+> [`spring-mvc-forms-notes.md`](./spring-mvc-forms-notes.md).
+
 ## Caveat
 
 JSP + Spring Boot **fat JARs** has known limitations and is officially
