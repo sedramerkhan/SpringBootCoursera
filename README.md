@@ -37,6 +37,10 @@ Concise references written while working through the course:
   authorization with `spring-boot-starter-security`: an in-memory user, BCrypt
   password hashing, URL rules and form login/logout, CSRF tokens, and the
   dispatcher-type fix for JSP forwards.
+- [JPA, Spring Data JPA & H2](docs/jpa-h2-notes.md) — storing todos in a database
+  with little/no SQL: the JDBC → Spring JDBC → JPA → Spring Data JPA evolution,
+  `@Entity` mapping, a `JpaRepository` with derived queries, and when to use the
+  in-memory H2 database (learning/tests vs. a real server DB).
 
 ## Running the app
 

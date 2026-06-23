@@ -1,52 +1,64 @@
 package com.sm.coursera.todo
 
 import org.springframework.stereotype.Service
-import java.time.LocalDate
 
 /**
- * Holds the todos. Backed by a static in-memory list for now — no database.
- * Swapping this for a JPA repository later would not change the controller.
+ * Service layer for todos — the middle tier in `Controller -> Service ->
+ * Repository`. The controller handles HTTP, the repository handles data access,
+ * and this class holds everything in between: the **business logic**.
+ *
+ * Why a service layer (what it's for):
+ *  1. Business rules — decisions that are neither HTTP nor SQL. Here: forcing
+ *     `id = 0` on add so a forged hidden form field can't overwrite another
+ *     row, and verifying ownership before update/delete so a user can only
+ *     touch their own todos.
+ *  2. Transaction boundaries — `@Transactional` belongs on service methods; an
+ *     operation spanning several repository calls commits/rolls back as one.
+ *  3. Orchestration — coordinating multiple repositories/services for one
+ *     feature (none needed yet, but this is where it would live).
+ *  4. Translation — adapting between web shapes and the domain, e.g. turning the
+ *     repository's deleted-row count into a simple Boolean.
+ *  5. A single reuse point — any caller (this MVC controller, a future REST API,
+ *     a scheduled job, a test) gets the same rules without duplicating them.
+ *
+ * Keeping this logic here (not in the controller) means it isn't repeated per
+ * handler and stays reusable; keeping it out of the repository keeps data access
+ * thin. The class is currently small, but it's the natural place for this logic
+ * to grow.
+ *
+ * Backed by a JPA repository (H2 database) instead of the original in-memory
+ * list — the controller didn't change because the method signatures are the
+ * same. Access stays scoped to the logged-in user throughout.
  */
 @Service
-class TodoService {
+class TodoService(
+    private val todoRepository: TodoRepository,
+) {
 
-    // Hard-coded test data. mutableListOf so add/delete can be added later.
-    private val todos = mutableListOf(
-        Todo(1, "Sedra", "Learn Spring Boot", LocalDate.now().plusMonths(3), false),
-        Todo(2, "Sedra", "Learn Spring MVC", LocalDate.now().plusMonths(6), false),
-        Todo(3, "Sedra", "Learn JSP & JSTL", LocalDate.now().plusMonths(1), true),
-    )
-
-    // Case-insensitive so it matches whatever capitalisation was typed at login.
     fun findByUsername(username: String): List<Todo> =
-        todos.filter { it.username.equals(username, ignoreCase = true) }
+        todoRepository.findByUsernameIgnoreCase(username)
 
-    // Loads a single todo for editing — scoped to the user so you can't open
-    // someone else's. null if not found.
+    // Loads a single todo for editing — scoped to the user. null if not found.
     fun findById(id: Int, username: String): Todo? =
-        todos.find { it.id == id && it.username.equals(username, ignoreCase = true) }
+        todoRepository.findByIdAndUsernameIgnoreCase(id, username)
 
-    // Adds a new todo and returns it. We assign the id here (max+1) so it stays
-    // unique, even though the data is just an in-memory list for now.
+    // Force id = 0 so this is always an INSERT and the DB assigns the id — a
+    // client can't smuggle an id in via the hidden form field to overwrite an
+    // existing row. save() returns the persisted entity (with its new id).
     fun addTodo(todo: Todo): Todo {
-        todo.id = (todos.maxOfOrNull { it.id } ?: 0) + 1
-        todos.add(todo)
-        return todo
+        todo.id = 0
+        return todoRepository.save(todo)
     }
 
-    // Replaces the existing todo that has the same id (and belongs to the user).
-    // Returns true if one was updated.
+    // Update only if the todo exists AND belongs to this user; otherwise a
+    // crafted request could edit someone else's row. Returns true if updated.
     fun updateTodo(todo: Todo): Boolean {
-        val index = todos.indexOfFirst {
-            it.id == todo.id && it.username.equals(todo.username, ignoreCase = true)
-        }
-        if (index == -1) return false
-        todos[index] = todo
+        if (todoRepository.findByIdAndUsernameIgnoreCase(todo.id, todo.username) == null) return false
+        todoRepository.save(todo)
         return true
     }
 
-    // Deletes by id, but only if the todo belongs to this user — so a crafted
-    // request can't remove someone else's todo. Returns true if one was removed.
+    // Deletes by id, scoped to the user. Returns true if a row was removed.
     fun deleteById(id: Int, username: String): Boolean =
-        todos.removeIf { it.id == id && it.username.equals(username, ignoreCase = true) }
+        todoRepository.deleteByIdAndUsernameIgnoreCase(id, username) > 0
 }

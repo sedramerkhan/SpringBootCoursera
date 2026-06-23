@@ -49,6 +49,31 @@
             <artifactId>spring-boot-devtools</artifactId>
         </dependency>
 
+        <!-- Spring Data JPA: repositories + Hibernate as the JPA provider.
+             Turns the Todo class into a database-mapped @Entity and gives us
+             CRUD via TodoRepository without writing SQL. -->
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-data-jpa</artifactId>
+        </dependency>
+
+        <!-- H2: in-memory SQL database. Great for learning/dev — the schema is
+             created from the @Entity on startup and seeded from data.sql, and
+             everything is gone on shutdown. -->
+        <dependency>
+            <groupId>com.h2database</groupId>
+            <artifactId>h2</artifactId>
+            <scope>runtime</scope>
+        </dependency>
+
+        <!-- H2 web console support. In Spring Boot 4.x the console
+             auto-configuration lives in its own module (not pulled in by the H2
+             driver), so we add it explicitly to browse the DB at /h2-console. -->
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-h2console</artifactId>
+        </dependency>
+
         <!-- Server-side bean validation (@Valid, @Size, @NotBlank, …). Pulls in
              the jakarta.validation API + Hibernate Validator implementation. -->
         <dependency>
@@ -133,7 +158,34 @@
                 </executions>
                 <configuration>
                     <jvmTarget>1.8</jvmTarget>
+                    <!-- Compiler plugins needed for JPA entities written in Kotlin:
+                         - no-arg (jpa preset): synthesises the no-arg constructor
+                           Hibernate needs to instantiate an entity.
+                         - all-open: opens classes annotated with the JPA
+                           annotations below, since Kotlin classes are final by
+                           default and Hibernate may need to subclass them. -->
+                    <compilerPlugins>
+                        <plugin>jpa</plugin>
+                        <plugin>all-open</plugin>
+                    </compilerPlugins>
+                    <pluginOptions>
+                        <option>all-open:annotation=jakarta.persistence.Entity</option>
+                        <option>all-open:annotation=jakarta.persistence.MappedSuperclass</option>
+                        <option>all-open:annotation=jakarta.persistence.Embeddable</option>
+                    </pluginOptions>
                 </configuration>
+                <dependencies>
+                    <dependency>
+                        <groupId>org.jetbrains.kotlin</groupId>
+                        <artifactId>kotlin-maven-noarg</artifactId>
+                        <version>${kotlin.version}</version>
+                    </dependency>
+                    <dependency>
+                        <groupId>org.jetbrains.kotlin</groupId>
+                        <artifactId>kotlin-maven-allopen</artifactId>
+                        <version>${kotlin.version}</version>
+                    </dependency>
+                </dependencies>
             </plugin>
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>

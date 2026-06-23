@@ -57,9 +57,9 @@ class SpringSecurityConfiguration {
      *    after a successful sign-in;
      *  - logout (POST /logout) clears the session and returns to /login?logout.
      *
-     * CSRF protection stays on (the default). The Spring <form:form> tags add
-     * the token automatically; plain HTML forms include it via the _csrf
-     * request attribute (see the JSPs).
+     * CSRF protection stays on (the default) except for the H2 console. The
+     * Spring <form:form> tags add the token automatically; plain HTML forms
+     * include it via the _csrf request attribute (see the JSPs).
      */
     @Bean
     fun securityFilterChain(http: HttpSecurity): SecurityFilterChain {
@@ -73,6 +73,8 @@ class SpringSecurityConfiguration {
                     // forward to the login JSP is itself blocked and bounces back
                     // to /login, causing an infinite redirect loop.
                     .dispatcherTypeMatchers(DispatcherType.FORWARD, DispatcherType.ERROR).permitAll()
+                    // H2 web console (dev-only) — let it through without login.
+                    .requestMatchers("/h2-console/**").permitAll()
                     .requestMatchers("/login", "/css/**").permitAll()
                     .anyRequest().authenticated()
             }
@@ -87,6 +89,11 @@ class SpringSecurityConfiguration {
                     .logoutSuccessUrl("/login?logout")
                     .permitAll()
             }
+            // The H2 console posts plain forms (no CSRF token) and renders inside
+            // frames. Disable CSRF for it and allow same-origin framing so the
+            // console works; the rest of the app keeps CSRF + frame protection.
+            .csrf { csrf -> csrf.ignoringRequestMatchers("/h2-console/**") }
+            .headers { headers -> headers.frameOptions { frame -> frame.sameOrigin() } }
         return http.build()
     }
 }
