@@ -1,0 +1,19 @@
+/* Design tokens -----------------------------------------------------------
+   CSS custom properties: set a value once here, use it everywhere else.
+   Want a different look? Tweak these and the whole site follows.            */
+:root {
+    --brand:        #6366f1;   /* indigo  */
+    --brand-dark:   #4f46e5;
+    --bg-from:      #6366f1;   /* background gradient start */
+    --bg-to:        #8b5cf6;   /* background gradient end   */
+    --surface:      #ffffff;
+    --text:         #1e293b;
+    --text-muted:   #64748b;
+    --border:       #e2e8f0;
+    --danger:       #dc2626;
+
+    --radius:       14px;
+    --radius-sm:    8px;
+    --gap:          1rem;
+    --shadow:       0 10px 30px rgba(15, 23, 42, .18);
+}

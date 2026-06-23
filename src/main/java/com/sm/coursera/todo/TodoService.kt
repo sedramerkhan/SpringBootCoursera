@@ -28,4 +28,9 @@ class TodoService {
         todos.add(todo)
         return todo
     }
+
+    // Deletes by id, but only if the todo belongs to this user — so a crafted
+    // request can't remove someone else's todo. Returns true if one was removed.
+    fun deleteById(id: Int, username: String): Boolean =
+        todos.removeIf { it.id == id && it.username.equals(username, ignoreCase = true) }
 }

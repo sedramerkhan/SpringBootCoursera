@@ -1,0 +1,23 @@
+/* Card — a centered surface you can drop any content into ------------------ */
+.card {
+    width: 100%;
+    max-width: 400px;
+    background: var(--surface);
+    border-radius: var(--radius);
+    box-shadow: var(--shadow);
+    padding: 2.25rem;
+}
+
+.card__title {
+    margin: 0 0 .35rem;
+    font-size: 1.6rem;
+}
+
+.card__subtitle {
+    margin: 0 0 1.75rem;
+    color: var(--text-muted);
+    font-size: .95rem;
+}
+
+/* A wider card variant — for tables / list pages */
+.card--wide { max-width: 640px; }

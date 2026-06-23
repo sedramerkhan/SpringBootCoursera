@@ -1,0 +1,35 @@
+/* Buttons ------------------------------------------------------------------ */
+.btn {
+    margin-top: .5rem;
+    padding: .8rem 1rem;
+    font-size: 1rem;
+    font-weight: 600;
+    color: #fff;
+    background: var(--brand);
+    border: none;
+    border-radius: var(--radius-sm);
+    cursor: pointer;
+    transition: background .15s, transform .05s;
+}
+.btn:hover  { background: var(--brand-dark); }
+.btn:active { transform: translateY(1px); }
+
+/* Modifiers */
+.btn--sm     { margin-top: 0; padding: .4rem .75rem; font-size: .85rem; }
+.btn--danger { background: var(--danger); }
+.btn--danger:hover { background: #b91c1c; }
+
+/* Icon-only button — transparent until hovered (used for the row delete icon) */
+.btn-icon {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    padding: .35rem;
+    color: var(--text-muted);
+    background: none;
+    border: none;
+    border-radius: var(--radius-sm);
+    cursor: pointer;
+    transition: color .15s, background .15s;
+}
+.btn-icon:hover { color: var(--danger); background: #fef2f2; }

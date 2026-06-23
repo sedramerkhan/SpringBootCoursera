@@ -1,0 +1,36 @@
+/* Helpers ------------------------------------------------------------------ */
+.stack > * + * { margin-top: .75rem; }        /* vertical rhythm */
+
+.muted { color: var(--text-muted); font-size: .9rem; }
+
+.pill {
+    display: inline-block;
+    padding: .25rem .7rem;
+    border-radius: 999px;
+    background: #eef2ff;
+    color: var(--brand-dark);
+    font-size: .8rem;
+    font-weight: 600;
+}
+
+/* A labelled value row, used on the welcome page to echo the inputs */
+.kv {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 1rem;
+    padding: .75rem 0;
+    border-bottom: 1px solid var(--border);
+}
+.kv:last-of-type { border-bottom: none; }
+.kv__key   { color: var(--text-muted); font-size: .85rem; font-weight: 600; }
+.kv__value { font-weight: 600; word-break: break-all; }
+
+.link {
+    display: inline-block;
+    margin-top: 1.5rem;
+    color: var(--brand-dark);
+    text-decoration: none;
+    font-weight: 600;
+}
+.link:hover { text-decoration: underline; }

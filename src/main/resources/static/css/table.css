@@ -1,0 +1,30 @@
+/* Data table — reusable for any list of rows ------------------------------- */
+.table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 1.25rem;
+    font-size: .92rem;
+}
+.table th, .table td {
+    padding: .65rem .5rem;
+    text-align: left;
+    border-bottom: 1px solid var(--border);
+}
+.table th {
+    color: var(--text-muted);
+    font-size: .8rem;
+    text-transform: uppercase;
+    letter-spacing: .03em;
+}
+.table tbody tr:last-child td { border-bottom: none; }
+
+/* Status badges */
+.badge {
+    display: inline-block;
+    padding: .2rem .6rem;
+    border-radius: 999px;
+    font-size: .75rem;
+    font-weight: 600;
+}
+.badge--done    { background: #dcfce7; color: #15803d; }
+.badge--pending { background: #fef9c3; color: #a16207; }

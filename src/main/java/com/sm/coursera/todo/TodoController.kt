@@ -7,6 +7,7 @@ import org.springframework.ui.ModelMap
 import org.springframework.validation.BindingResult
 import org.springframework.web.bind.annotation.GetMapping
 import org.springframework.web.bind.annotation.ModelAttribute
+import org.springframework.web.bind.annotation.PathVariable
 import org.springframework.web.bind.annotation.PostMapping
 import org.springframework.web.bind.annotation.SessionAttribute
 import java.time.LocalDate
@@ -78,6 +79,21 @@ class TodoController(
         todo.username = username // trust the session, not a client-supplied field
         todoService.addTodo(todo)
         logger.debug("added todo for {}: {}", username, todo.description)
+        return "redirect:/todos"
+    }
+
+    //The annotation has to match the method the browser actually sends, and an HTML form can only send GET or POST
+    // POST /todos/{id}/delete -> remove the row, then redirect back to the list
+    // (PRG). POST (not a GET link) so a crawler/prefetch can't delete a todo.
+    // Deletion is scoped to the logged-in user by passing the session name.
+    @PostMapping("/todos/{id}/delete")
+    fun deleteTodo(
+        @SessionAttribute(name = "name", required = false) username: String?,
+        @PathVariable id: Int,
+    ): String {
+        if (username.isNullOrBlank()) return "redirect:/login"
+        val removed = todoService.deleteById(id, username)
+        logger.debug("delete todo id={} for {} -> removed={}", id, username, removed)
         return "redirect:/todos"
     }
 }
