@@ -1,0 +1,23 @@
+<%-- Reusable top navigation bar (a JSP fragment, .jspf).
+
+     Include it at the top of a page's <body> with a static include:
+        <%@ include file="../common/navbar.jspf" %>
+     Static include merges this source into the page at translation time, so
+     EL like ${name} resolves in the *including* page's scope.
+
+     Adapted from a Bootstrap navbar to this project's own CSS (see navbar.css)
+     and routes. --%>
+<nav class="navbar">
+    <a class="navbar__brand" href="https://www.coursera.org/specializations/packt-learn-spring-boot-in-100-steps-beginner-to-expert"
+       target="_blank" rel="noopener noreferrer">Coursera&nbsp;Todos</a>
+
+    <ul class="navbar__nav">
+        <li><a class="navbar__link" href="/todos">Todos</a></li>
+        <li><a class="navbar__link" href="/todos/add">Add todo</a></li>
+    </ul>
+
+    <ul class="navbar__nav navbar__nav--right">
+        <li class="navbar__user">${name}</li>
+        <li><a class="navbar__link" href="/logout">Logout</a></li>
+    </ul>
+</nav>

@@ -1,13 +1,6 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>Welcome</title>
-    <link rel="stylesheet" href="/css/app.css">
-</head>
-<body>
+<%@ include file="../common/header.jspf" %>
+<%@ include file="../common/navbar.jspf" %>
     <div class="card">
         <span class="pill">Signed in</span>
         <h1 class="card__title" style="margin-top:.75rem;">Hello, ${name}!</h1>
@@ -33,5 +26,4 @@
             <a class="link" href="/login" style="margin-top:0;">&larr; Back to login</a>
         </div>
     </div>
-</body>
-</html>
+<%@ include file="../common/footer.jspf" %>

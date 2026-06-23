@@ -1,0 +1,3 @@
+<%-- Closes the page opened by header.jspf. Static-include at the bottom. --%>
+</body>
+</html>

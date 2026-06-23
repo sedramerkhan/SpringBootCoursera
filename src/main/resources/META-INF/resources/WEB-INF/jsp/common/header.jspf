@@ -1,0 +1,13 @@
+<%-- Common page head + opening <body>. Static-include at the very top of a
+     page (after its own <%@ page %>/<%@ taglib %> directives):
+        <%@ include file="../common/header.jspf" %>
+     Pair it with footer.jspf, which closes </body></html>. --%>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Manage your Todos</title>
+    <link rel="stylesheet" href="/css/app.css">
+</head>
+<body>

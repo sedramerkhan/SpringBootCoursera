@@ -1,14 +1,5 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>Login</title>
-    <!-- Reusable stylesheet served from src/main/resources/static/css/ -->
-    <link rel="stylesheet" href="/css/app.css">
-</head>
-<body>
+<%@ include file="../common/header.jspf" %>
     <div class="card">
         <h1 class="card__title">Welcome back</h1>
         <p class="card__subtitle">Sign in to continue.</p>
@@ -35,5 +26,4 @@
             <button class="btn" type="submit">Sign in</button>
         </form>
     </div>
-</body>
-</html>
+<%@ include file="../common/footer.jspf" %>

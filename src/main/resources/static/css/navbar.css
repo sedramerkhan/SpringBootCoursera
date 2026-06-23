@@ -1,0 +1,43 @@
+/* Top navigation bar ------------------------------------------------------- */
+.navbar {
+    position: fixed;            /* sits above the centered card layout */
+    top: 0; left: 0; right: 0;
+    z-index: 10;
+    display: flex;
+    align-items: center;
+    gap: 1.5rem;
+    padding: .7rem 1.25rem;
+    background: rgba(255, 255, 255, .95);
+    box-shadow: 0 2px 10px rgba(15, 23, 42, .12);
+}
+
+.navbar__brand {
+    font-weight: 700;
+    font-size: 1.05rem;
+    color: var(--brand-dark);
+    text-decoration: none;
+}
+
+.navbar__nav {
+    list-style: none;
+    display: flex;
+    align-items: center;
+    gap: 1.1rem;
+    margin: 0;
+    padding: 0;
+}
+.navbar__nav--right { margin-left: auto; }   /* push this group to the right */
+
+.navbar__link {
+    color: var(--text-muted);
+    text-decoration: none;
+    font-weight: 600;
+    font-size: .9rem;
+}
+.navbar__link:hover { color: var(--brand); }
+
+.navbar__user {
+    color: var(--text);
+    font-weight: 600;
+    font-size: .9rem;
+}

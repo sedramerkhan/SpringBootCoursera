@@ -7,7 +7,8 @@ body {
     display: flex;
     align-items: center;
     justify-content: center;
-    padding: 1.5rem;
+    /* extra top padding leaves room for the fixed navbar */
+    padding: 4.5rem 1.5rem 1.5rem;
     font-family: system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
     color: var(--text);
     /* Reusable gradient background */

@@ -3,15 +3,8 @@
      is springframework.org/tags/form (NOT a jakarta uri); it ships with
      spring-webmvc, so no extra dependency is needed. --%>
 <%@ taglib prefix="form" uri="http://www.springframework.org/tags/form" %>
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>Add Todo</title>
-    <link rel="stylesheet" href="/css/app.css">
-</head>
-<body>
+<%@ include file="../common/header.jspf" %>
+<%@ include file="../common/navbar.jspf" %>
     <div class="card">
         <h1 class="card__title">Add a todo</h1>
         <p class="card__subtitle">${name}, what do you want to get done?</p>
@@ -43,5 +36,4 @@
 
         <a class="link" href="/todos">&larr; Back to list</a>
     </div>
-</body>
-</html>
+<%@ include file="../common/footer.jspf" %>

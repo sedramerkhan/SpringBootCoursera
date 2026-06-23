@@ -1,15 +1,8 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%-- JSTL core tags. The jakarta.* uri matches the Jakarta EE JSTL dependency. --%>
 <%@ taglib prefix="c" uri="jakarta.tags.core" %>
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>Your Todos</title>
-    <link rel="stylesheet" href="/css/app.css">
-</head>
-<body>
+<%@ include file="../common/header.jspf" %>
+<%@ include file="../common/navbar.jspf" %>
     <div class="card card--wide">
         <span class="pill">Signed in</span>
         <%-- ${name} comes from the session (set at login via @SessionAttributes). --%>
@@ -80,10 +73,8 @@
             </tbody>
         </table>
 
-        <div style="margin-top:1.5rem; display:flex; gap:1.25rem; align-items:center;">
-            <a class="btn" href="/todos/add" style="text-decoration:none; text-align:center;">+ Add todo</a>
-            <a class="link" href="/login" style="margin-top:0;">&larr; Sign out</a>
+        <div style="margin-top:1.5rem;">
+            <a class="btn" href="/todos/add" style="text-decoration:none;">+ Add todo</a>
         </div>
     </div>
-</body>
-</html>
+<%@ include file="../common/footer.jspf" %>

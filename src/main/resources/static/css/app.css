@@ -13,6 +13,7 @@
 
 @import "tokens.css";    /* design tokens (:root variables) */
 @import "base.css";      /* reset + page background          */
+@import "navbar.css";    /* fixed top navigation bar         */
 @import "card.css";      /* .card surface + variants         */
 @import "buttons.css";   /* .btn, modifiers, .btn-icon       */
 @import "forms.css";     /* .form, .field, validation, alert */

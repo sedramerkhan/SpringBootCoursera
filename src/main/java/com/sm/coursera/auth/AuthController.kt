@@ -1,5 +1,6 @@
 package com.sm.coursera.auth
 
+import jakarta.servlet.http.HttpSession
 import org.slf4j.LoggerFactory
 import org.springframework.stereotype.Controller
 import org.springframework.ui.ModelMap
@@ -64,5 +65,14 @@ class AuthController(
         model.addAttribute("name", name)
         model.addAttribute("password", password)
         return "auth/welcome"
+    }
+
+    // GET /logout -> clear the whole session (drops the @SessionAttributes
+    // "name" too) and send the user back to the login page.
+    @GetMapping("/logout")
+    fun logout(session: HttpSession): String {
+        logger.debug("logout — invalidating session")
+        session.invalidate()
+        return "redirect:/login"
     }
 }

@@ -1,14 +1,7 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@ taglib prefix="form" uri="http://www.springframework.org/tags/form" %>
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>Edit Todo</title>
-    <link rel="stylesheet" href="/css/app.css">
-</head>
-<body>
+<%@ include file="../common/header.jspf" %>
+<%@ include file="../common/navbar.jspf" %>
     <div class="card">
         <h1 class="card__title">Edit todo</h1>
         <p class="card__subtitle">${name}, update the details below.</p>
@@ -41,5 +34,4 @@
 
         <a class="link" href="/todos">&larr; Back to list</a>
     </div>
-</body>
-</html>
+<%@ include file="../common/footer.jspf" %>
