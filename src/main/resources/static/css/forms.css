@@ -26,6 +26,18 @@
     background: #fff;
 }
 
+/* A checkbox + its label on one row */
+.checkbox-row {
+    display: flex;
+    align-items: center;
+    gap: .5rem;
+}
+.checkbox-row label {
+    font-size: .9rem;
+    font-weight: 600;
+    color: var(--text-muted);
+}
+
 /* Inline field validation message — shown under a form field by <form:errors> */
 .field-error {
     display: block;

@@ -82,6 +82,47 @@ class TodoController(
         return "redirect:/todos"
     }
 
+    // GET /todos/{id}/edit -> load the existing todo and show it in the form,
+    // pre-filled (bean -> form). Same view machinery as add, just seeded with a
+    // real todo instead of a blank one.
+    @GetMapping("/todos/{id}/edit")
+    fun showEditTodo(
+        @SessionAttribute(name = "name", required = false) username: String?,
+        @PathVariable id: Int,
+        model: ModelMap,
+    ): String {
+        if (username.isNullOrBlank()) return "redirect:/login"
+        val todo = todoService.findById(id, username) ?: return "redirect:/todos"
+        model.addAttribute("name", username)
+        model.addAttribute("todo", todo)
+        return "todo/editTodo"
+    }
+
+    // POST /todos/{id}/update -> validate and save the edited todo (PRG). Same
+    // binding/validation rules as add; BindingResult must follow the bean.
+    @PostMapping("/todos/{id}/update")
+    fun updateTodo(
+        @SessionAttribute(name = "name", required = false) username: String?,
+        @PathVariable id: Int,
+        @Valid @ModelAttribute("todo") todo: Todo,
+        result: BindingResult,
+        model: ModelMap,
+    ): String {
+        if (username.isNullOrBlank()) return "redirect:/login"
+
+        if (result.hasErrors()) {
+            logger.debug("update todo validation failed: {} error(s)", result.errorCount)
+            model.addAttribute("name", username)
+            return "todo/editTodo"
+        }
+
+        todo.id = id                 // trust the path + session, not client fields
+        todo.username = username
+        todoService.updateTodo(todo)
+        logger.debug("updated todo id={} for {}", id, username)
+        return "redirect:/todos"
+    }
+
     //The annotation has to match the method the browser actually sends, and an HTML form can only send GET or POST
     // POST /todos/{id}/delete -> remove the row, then redirect back to the list
     // (PRG). POST (not a GET link) so a crawler/prefetch can't delete a todo.

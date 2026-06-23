@@ -21,12 +21,28 @@ class TodoService {
     fun findByUsername(username: String): List<Todo> =
         todos.filter { it.username.equals(username, ignoreCase = true) }
 
+    // Loads a single todo for editing — scoped to the user so you can't open
+    // someone else's. null if not found.
+    fun findById(id: Int, username: String): Todo? =
+        todos.find { it.id == id && it.username.equals(username, ignoreCase = true) }
+
     // Adds a new todo and returns it. We assign the id here (max+1) so it stays
     // unique, even though the data is just an in-memory list for now.
     fun addTodo(todo: Todo): Todo {
         todo.id = (todos.maxOfOrNull { it.id } ?: 0) + 1
         todos.add(todo)
         return todo
+    }
+
+    // Replaces the existing todo that has the same id (and belongs to the user).
+    // Returns true if one was updated.
+    fun updateTodo(todo: Todo): Boolean {
+        val index = todos.indexOfFirst {
+            it.id == todo.id && it.username.equals(todo.username, ignoreCase = true)
+        }
+        if (index == -1) return false
+        todos[index] = todo
+        return true
     }
 
     // Deletes by id, but only if the todo belongs to this user — so a crafted

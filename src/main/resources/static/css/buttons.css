@@ -32,4 +32,7 @@
     cursor: pointer;
     transition: color .15s, background .15s;
 }
-.btn-icon:hover { color: var(--danger); background: #fef2f2; }
+/* Default hover = brand (used for the edit icon) */
+.btn-icon:hover { color: var(--brand); background: #eef2ff; }
+/* Danger variant hover = red (used for the delete icon) */
+.btn-icon--danger:hover { color: var(--danger); background: #fef2f2; }

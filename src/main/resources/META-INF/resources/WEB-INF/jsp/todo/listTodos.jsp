@@ -45,20 +45,35 @@
                             </c:choose>
                         </td>
                         <td>
-                            <%-- POST form per row so delete isn't a plain GET link. --%>
-                            <form action="/todos/${todo.id}/delete" method="post" style="margin:0;">
-                                <button type="submit" class="btn-icon" aria-label="Delete todo" title="Delete">
-                                    <%-- Inline SVG trash icon — no icon library needed. --%>
+                            <div style="display:flex; gap:.25rem; align-items:center;">
+                                <%-- Edit is navigation, so a GET link. --%>
+                                <a href="/todos/${todo.id}/edit" class="btn-icon"
+                                   aria-label="Edit todo" title="Edit">
+                                    <%-- Inline SVG pencil icon. --%>
                                     <svg width="18" height="18" viewBox="0 0 24 24" fill="none"
                                          stroke="currentColor" stroke-width="2"
                                          stroke-linecap="round" stroke-linejoin="round">
-                                        <polyline points="3 6 5 6 21 6"></polyline>
-                                        <path d="M19 6l-1 14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2L5 6"></path>
-                                        <path d="M10 11v6M14 11v6"></path>
-                                        <path d="M9 6V4a1 1 0 0 1 1-1h4a1 1 0 0 1 1 1v2"></path>
+                                        <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"></path>
+                                        <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"></path>
                                     </svg>
-                                </button>
-                            </form>
+                                </a>
+
+                                <%-- Delete changes state, so a POST form (not a GET link). --%>
+                                <form action="/todos/${todo.id}/delete" method="post" style="margin:0;">
+                                    <button type="submit" class="btn-icon btn-icon--danger"
+                                            aria-label="Delete todo" title="Delete">
+                                        <%-- Inline SVG trash icon — no icon library needed. --%>
+                                        <svg width="18" height="18" viewBox="0 0 24 24" fill="none"
+                                             stroke="currentColor" stroke-width="2"
+                                             stroke-linecap="round" stroke-linejoin="round">
+                                            <polyline points="3 6 5 6 21 6"></polyline>
+                                            <path d="M19 6l-1 14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2L5 6"></path>
+                                            <path d="M10 11v6M14 11v6"></path>
+                                            <path d="M9 6V4a1 1 0 0 1 1-1h4a1 1 0 0 1 1 1v2"></path>
+                                        </svg>
+                                    </button>
+                                </form>
+                            </div>
                         </td>
                     </tr>
                 </c:forEach>
