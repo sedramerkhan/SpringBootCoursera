@@ -42,6 +42,26 @@ Concise references written while working through the course:
   `@Entity` mapping, a `JpaRepository` with derived queries, and when to use the
   in-memory H2 database (learning/tests vs. a real server DB).
 
+## Testing examples
+
+Runnable JUnit 5 and Mockito examples live under
+`src/test/java/com/sm/coursera/examples/` (with the classes under test in
+`src/main/java/com/sm/coursera/examples/`):
+
+- **JUnit** — [`MyMathTest`](src/test/java/com/sm/coursera/examples/MyMathTest.java):
+  `@Test`, assertions (`assertEquals`, `assertTrue`, `assertArrayEquals`), and the
+  `@BeforeEach` / `@AfterEach` / `@BeforeAll` / `@AfterAll` lifecycle hooks.
+- **Mockito** — [`BusinessLayerTest`](src/test/java/com/sm/coursera/examples/BusinessLayerTest.java):
+  mocking a dependency with `mock(...)` and stubbing only the needed method via
+  `when(...).thenReturn(...)`, so the class under test is tested without a real database.
+
+Both come with `spring-boot-starter-(webmvc-)test`. Run them with:
+
+```bash
+./mvnw test                                   # all tests
+./mvnw -Dtest='MyMathTest,BusinessLayerTest' test   # just the examples
+```
+
 ## Running the app
 
 ```bash
