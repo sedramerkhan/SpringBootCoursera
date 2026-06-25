@@ -11,6 +11,8 @@ import org.springframework.web.bind.annotation.RestController
 class CourseController {
 
 
+    // GET /courses -> Jackson serializes the returned List<Course> to a JSON array.
+    @GetMapping
     fun getFakeCourses(): List<Course> = listOf(
         Course(1, "Spring Boot Fundamentals", "John Doe"),
         Course(2, "Kotlin for Beginners", "Jane Smith"),
@@ -20,7 +22,7 @@ class CourseController {
 
 
     @GetMapping("/say-hello")
-    @ResponseBody
+   // @ResponseBody no need to it since we are using @RestController not @Controller
     fun sayHello() = "Hello World!"
 
     @GetMapping("/page", produces = [MediaType.TEXT_HTML_VALUE])

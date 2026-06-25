@@ -6,6 +6,11 @@ A practice project for learning Spring Boot, built with Maven and Kotlin/Java.
 
 Concise references written while working through the course:
 
+- [Maven](docs/maven-notes.md) — the build tool: the POM, dependencies (direct vs
+  transitive), plugins/goals, the build lifecycle, and the key `mvn` commands.
+- [Gradle](docs/gradle-notes.md) — the Maven alternative: `build.gradle` vs
+  `settings.gradle`, the Java/Spring Boot plugins, why its DSL and incremental
+  builds are faster, and a Maven-vs-Gradle comparison.
 - [Spring vs Spring MVC vs Spring Boot](docs/spring-stack-notes.md) — how the
   three layers relate (core IoC container → web module → auto-configured
   turnkey assembly) and the Starters that bundle them.
@@ -16,6 +21,9 @@ Concise references written while working through the course:
   that activate them.
 - [DispatcherServlet & Request Flow](docs/dispatcher-servlet-notes.md) — how an
   HTTP request travels through the front controller to your controller and back.
+- [@Controller vs @RestController & JSON](docs/rest-controller-json-notes.md) —
+  view names vs. response bodies, why `@RestController` drops `@ResponseBody`, and
+  how Jackson serializes a returned bean/list to JSON automatically.
 - [DevTools](docs/devtools-notes.md) — automatic application restart on code or
   property changes during development.
 - [Profiles](docs/profiles-notes.md) — environment-specific configuration
