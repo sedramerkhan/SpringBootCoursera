@@ -72,6 +72,43 @@ interface TodoRepository : JpaRepository<Todo, Int> {
 The repository is the only new layer the storage swap required — the controller
 and JSPs needed **zero** changes.
 
+### 3. Trying the repository at startup — `CommandLineRunner`
+
+A bean implementing **`CommandLineRunner`** has its `run()` called **once**, right
+after the context is ready (before the web server starts serving). It's a handy
+place to exercise the repository and watch JPA work in the logs — no HTTP request
+needed. Spring injects the repository for you:
+
+```kotlin
+@Component
+class TodoDataRunner(private val repository: TodoRepository) : CommandLineRunner {
+
+    private val logger = LoggerFactory.getLogger(javaClass)
+
+    override fun run(vararg args: String) {
+        // CREATE — id = 0 means "new", so save() inserts and returns the row
+        // with its database-assigned id.
+        val saved = repository.save(
+            Todo(username = "demo", description = "Learn Spring Data JPA",
+                 targetDate = LocalDate.now().plusDays(7))
+        )
+        logger.info("Saved todo with generated id={}", saved.id)
+
+        // READ by id (Optional<Todo>) and via a derived query.
+        repository.findById(saved.id).ifPresent { logger.info("Found: {}", it.description) }
+        logger.info("Demo todos: {}", repository.findByUsernameIgnoreCase("demo"))
+    }
+}
+```
+
+Notes:
+- `run(vararg args: String)` — the args are the command-line arguments passed to
+  the app; ignore them if unused.
+- We use a throwaway `"demo"` username so these rows don't appear for a logged-in
+  user in the UI.
+- See [`TodoDataRunner`](../src/main/java/com/sm/coursera/todo/TodoDataRunner.kt)
+  in this project — watch its `INFO` lines in the console at startup.
+
 ## What is H2, and when should I use it?
 
 **H2** is a tiny SQL database that can run **in-memory** (inside your app's JVM).

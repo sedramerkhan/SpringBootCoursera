@@ -75,6 +75,9 @@ class SpringSecurityConfiguration {
                     .dispatcherTypeMatchers(DispatcherType.FORWARD, DispatcherType.ERROR).permitAll()
                     // H2 web console (dev-only) — let it through without login.
                     .requestMatchers("/h2-console/**").permitAll()
+                    // Spring Data REST API (dev demo) — open so it can be called
+                    // from a browser / API client without form login.
+                    .requestMatchers("/api/**").permitAll()
                     .requestMatchers("/login", "/css/**").permitAll()
                     .anyRequest().authenticated()
             }
@@ -92,7 +95,9 @@ class SpringSecurityConfiguration {
             // The H2 console posts plain forms (no CSRF token) and renders inside
             // frames. Disable CSRF for it and allow same-origin framing so the
             // console works; the rest of the app keeps CSRF + frame protection.
-            .csrf { csrf -> csrf.ignoringRequestMatchers("/h2-console/**") }
+            // The Spring Data REST API is called by non-browser clients (no CSRF
+            // token), so exclude it too — alongside the H2 console.
+            .csrf { csrf -> csrf.ignoringRequestMatchers("/h2-console/**", "/api/**") }
             .headers { headers -> headers.frameOptions { frame -> frame.sameOrigin() } }
         return http.build()
     }
