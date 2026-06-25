@@ -50,6 +50,10 @@ Concise references written while working through the course:
   `@Entity` mapping, a `JpaRepository` with derived queries, a `CommandLineRunner`
   that exercises the repo at startup, and when to use the in-memory H2 database
   (learning/tests vs. a real server DB).
+- [Spring Data REST](docs/spring-data-rest-notes.md) — auto-exposing a repository
+  as a REST API (`/api/notes`) with no controller: the `Note` entity +
+  `@RepositoryRestResource`, paging/sorting, the one-repository-per-entity gotcha,
+  and keeping `TodoRepository` private via `detection-strategy=annotated`.
 
 ## Testing examples
 

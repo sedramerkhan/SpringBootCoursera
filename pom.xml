@@ -65,6 +65,16 @@
             <artifactId>spring-boot-starter-data-rest</artifactId>
         </dependency>
 
+        <!-- Teaches Jackson about Kotlin: honours constructor default values and
+             non-null types when (de)serializing JSON. Without it, posting JSON
+             that omits a primitive field (e.g. Todo.id) fails with
+             "Cannot map null into type int". Spring Boot 4 ships Jackson 3, so
+             this is the tools.jackson (not com.fasterxml) module. -->
+        <dependency>
+            <groupId>tools.jackson.module</groupId>
+            <artifactId>jackson-module-kotlin</artifactId>
+        </dependency>
+
         <!-- H2: in-memory SQL database. Great for learning/dev — the schema is
              created from the @Entity on startup and seeded from data.sql, and
              everything is gone on shutdown. -->
