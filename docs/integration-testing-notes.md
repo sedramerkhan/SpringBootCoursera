@@ -5,15 +5,18 @@ compare JSON responses. Code: `src/test/java/com/sm/coursera/note/`.
 
 ## Integration test vs. unit test
 
-- **Unit test** — exercises *one* unit (a class or a few methods) in isolation,
-  with its collaborators mocked. Fast, no Spring context. Example in this repo:
-  `examples/BusinessLayerTest` (mocks `DataService` with Mockito).
+- **Unit test** — exercises *one* unit (a class, or one layer) in isolation, with
+  its collaborators mocked. Fast, little or no Spring context. Examples in this
+  repo: `examples/BusinessLayerTest` (plain Mockito, no Spring) and
+  `todo/TodoControllerTest` (the **web layer** sliced out with `@WebMvcTest`).
 - **Integration test** — launches the *whole* application and drives it the way a
   real client would. Slower, but proves the layers (web → Spring Data REST → JPA →
   H2) actually work together. Example: `note/NoteRestRepositoryIT`.
 
 Convention: integration tests are named `…IT` (the suffix the in28minutes course
-uses), unit tests `…Test`.
+uses), unit tests `…Test`. Surefire (`mvn test`) runs `…Test`; the `…IT` classes
+are for the integration-test phase, so a plain `mvn test` skips them — run an `IT`
+explicitly with `-Dtest=NoteRestRepositoryIT`.
 
 ## The integration test — `NoteRestRepositoryIT`
 
@@ -156,10 +159,67 @@ that demonstrates the behaviour:
 `RestTestClient`'s `.json(expected, JsonCompareMode.LENIENT)` is the same engine:
 `LENIENT` == `strict = false`, `STRICT` == `strict = true`.
 
+## Web-layer slice test — `TodoControllerTest`
+
+A *unit* test for the web layer. Where `@SpringBootTest` starts the whole app,
+**`@WebMvcTest(TodoController.class)`** starts **only** that controller plus the
+MVC infrastructure — no services, no repositories, no database. The controller's
+business-layer dependency (`TodoService`) is replaced with a Mockito mock we
+program per test.
+
+```java
+@WebMvcTest(TodoController.class)
+@AutoConfigureMockMvc(addFilters = false)   // skip the security filter chain
+class TodoControllerTest {
+
+    private static final Principal PRINCIPAL = () -> "Sedra";
+
+    @Autowired private MockMvc mockMvc;
+    @MockitoBean private TodoService todoService;   // the mocked business layer
+
+    @Test
+    void listTodos_showsUsersTodos() throws Exception {
+        when(todoService.findByUsername("Sedra")).thenReturn(List.of(/* 2 todos */));
+
+        mockMvc.perform(get("/todos").principal(PRINCIPAL))
+                .andExpect(status().isOk())
+                .andExpect(view().name("todo/listTodos"))
+                .andExpect(model().attribute("todos", hasSize(2)));
+    }
+}
+```
+
+Why `TodoController` and not the `Note` API: `@WebMvcTest` is a controller slice,
+and it doesn't load Spring Data REST's auto-generated endpoints — there's no
+controller class to name and no service to mock. `TodoController` is our only
+hand-written `Controller -> Service -> Repository` stack, so it's the real fit for
+this pattern.
+
+### Boot 4 changes from the course
+
+- **`@WebMvcTest`** moved to `org.springframework.boot.webmvc.test.autoconfigure`.
+- **`@MockBean` was removed.** Its replacement is **`@MockitoBean`**
+  (`org.springframework.test.context.bean.override.mockito`). Drop it and the
+  slice fails to start with *"No qualifying bean of type 'TodoService'"* — the
+  exact failure the course demonstrates, since the controller needs a service the
+  slice doesn't otherwise provide.
+
+### Two things this test shows
+
+- **Security is sliced off** with `addFilters = false`, and the authenticated user
+  is supplied directly as the request's `Principal` (all this controller reads).
+  `MockMvc` doesn't render JSPs, so we assert the **view name** and **model**, not
+  HTML.
+- **The "unstubbed mock returns null" branch.** `showEditTodo_whenNotFound...`
+  deliberately leaves `findById` unstubbed; the mock returns `null`, driving the
+  not-found path. This is our analogue of the course's 404 scenario — here the
+  controller redirects to `/todos` instead of returning 404.
+
 ## Running
 
 ```bash
-./mvnw -Dtest=NoteRestRepositoryIT test     # the integration test
+./mvnw -Dtest=NoteRestRepositoryIT test     # integration test (whole app)
+./mvnw -Dtest=TodoControllerTest test       # web-layer slice (unit) test
 ./mvnw -Dtest=JsonAssertTest test           # the JSONAssert learning test
-./mvnw test                                 # everything
+./mvnw test                                 # all unit tests (…Test); skips …IT
 ```
