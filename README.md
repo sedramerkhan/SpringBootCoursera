@@ -15,7 +15,9 @@ Concise references written while working through the course:
   three layers relate (core IoC container → web module → auto-configured
   turnkey assembly) and the Starters that bundle them.
 - [Spring Beans](docs/beans-notes.md) — what a "bean" is: an object whose
-  lifecycle Spring manages and injects for you (IoC).
+  lifecycle Spring manages and injects for you (IoC) — plus why DI pays off:
+  programming to an interface to swap implementations (e.g. a new payment
+  method, or cache vs. remote data source) without touching the consumers.
 - [Auto-Configuration](docs/auto-configuration-notes.md) — how Spring Boot
   auto-wires beans, where the configs live, and the `@Conditional...` rules
   that activate them.

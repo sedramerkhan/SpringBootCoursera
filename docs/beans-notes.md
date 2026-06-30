@@ -12,6 +12,15 @@ Every bean lives there. Instead of code doing `val x = SomeClass()`, you *declar
 that the class is a bean and Spring hands you the instance — this is
 **Inversion of Control (IoC)**: you don't build dependencies, the container does.
 
+The `ApplicationContext` is what **manages each bean's lifecycle** — it
+instantiates the bean, injects its dependencies, runs init callbacks, holds the
+instance, and runs destroy callbacks on shutdown.
+
+**What if a bean is removed from the context?** It stops being managed by
+Spring: no more injection, no lifecycle callbacks. Once nothing else holds a
+reference to it, it becomes eligible for **garbage collection** like any
+ordinary object.
+
 ## How a class becomes a bean
 
 Mark it with a stereotype annotation and Spring's component scan picks it up:
@@ -61,6 +70,60 @@ class CurrencyServiceConfigurationController(
 
 You never wrote `CurrencyServiceConfiguration(...)` — the container did, and gave
 you the same shared instance it gives everyone else.
+
+### Asking the context directly (`getBean`)
+
+If you have a handle on the context, you can also pull a bean out of it
+manually — handy in a `main`/`CommandLineRunner` or for quick experiments:
+
+```kotlin
+fun main(args: Array<String>) {
+    val context = runApplication<CourseraApplication>(*args)
+
+    val config = context.getBean(CurrencyServiceConfiguration::class.java)  // by type
+    val client = context.getBean("restClient", RestClient::class.java)      // by name + type
+}
+```
+
+Prefer constructor injection in normal code — it's testable and declares
+dependencies up front. Reach for `getBean(...)` only when you're outside a
+managed bean and genuinely need to ask the container yourself.
+
+## Why this matters: swapping implementations
+
+The real payoff of DI shows up when you **program to an interface**. Declare the
+dependency as an interface; provide one or more bean implementations; Spring
+injects the right one — and the code that *uses* it never changes.
+
+```kotlin
+interface Payment {
+    fun pay(amount: Long)
+}
+
+@Component
+class CreditCardPayment : Payment {
+    override fun pay(amount: Long) { /* … */ }
+}
+```
+
+```kotlin
+@Service
+class Checkout(
+    private val payment: Payment   // depends on the interface, not a concrete class
+)
+```
+
+To add a new payment method, write a new class that implements `Payment`,
+annotate it `@Component`, and you're done — `Checkout` is untouched. The same
+pattern lets you swap a data-access implementation (e.g. a cached source vs. a
+remote database) based on configuration, again without changing the consumers.
+
+This is the **maintainability / extensibility** win: new behavior is added by
+adding a class, not by editing the classes that depend on it (open/closed).
+
+> When more than one bean implements the same interface, disambiguate with
+> `@Primary` (a default winner) or `@Qualifier("name")` (pick explicitly) —
+> otherwise Spring can't decide which one to inject.
 
 ## Bean scope (the default)
 
