@@ -58,11 +58,41 @@ your own, Spring Boot backs off and skips its default.
 
 ## Inspecting what got configured
 
-- Run with `--debug` (or set `debug=true`) to print the
-  **Auto-configuration report**: a list of "Positive matches" (applied) and
-  "Negative matches" (skipped, with the reason).
+- Run with `--debug` (or set `debug=true` in `application.properties`) to print
+  the **Auto-configuration report** at startup: a list of "Positive matches"
+  (applied) and "Negative matches" (skipped, with the reason each was skipped).
+- Hit the **`/actuator/conditions`** endpoint for the same report as JSON, live,
+  without restarting in debug mode. It groups beans into `positiveMatches` and
+  `negativeMatches` with the condition that decided each. Requires the
+  `spring-boot-starter-actuator` dependency and exposing the endpoint, e.g.:
+
+  ```properties
+  management.endpoints.web.exposure.include=health,conditions
+  ```
+
+  Then browse `http://localhost:8080/actuator/conditions`. (See
+  [`actuator-notes.md`](./actuator-notes.md).)
 - In the IDE, use **Ctrl+Shift+T** (Find/Navigate to Class) to open a class
   like `DispatcherServletAutoConfiguration` and see which jar it comes from.
+
+## Overriding defaults with properties
+
+Auto-configuration sets **sensible defaults**; `application.properties` is how
+you explicitly override them without writing any bean. The property you set wins
+over the auto-configured default. A few common examples:
+
+| Property | Overrides the default... |
+|---|---|
+| `server.port=8081` | embedded server port (default `8080`) |
+| `spring.jpa.hibernate.ddl-auto=update` | schema generation strategy |
+| `spring.datasource.url=...` | auto-configured DataSource connection |
+| `logging.level.org.springframework=DEBUG` | default log level |
+
+Two ways to override an auto-config default:
+1. **Set a property** — for anything the auto-config exposes as a property
+   (the common case).
+2. **Declare your own bean** — the auto-config backs off via
+   `@ConditionalOnMissingBean` (see above) when a knob isn't exposed as a property.
 
 ## Quick mental model
 
