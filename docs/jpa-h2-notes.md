@@ -31,6 +31,42 @@ Each step exists to make you **write less code and less SQL**.
 **Bottom line:** we avoid SQL because it's error-prone boilerplate. JPA removes
 the queries (via mapping); Spring Data JPA removes the repository code too.
 
+## Abbreviations
+
+- **JDBC** — **J**ava **D**ata**b**ase **C**onnectivity.
+- **JPA** — **J**ava **P**ersistence **A**PI.
+
+## JPA vs Hibernate — the API vs its implementation
+
+**JPA is a specification (an API); Hibernate is the most popular implementation
+of it.** Think of JPA as an *interface* and Hibernate as one *class* that
+implements it (Toplink/EclipseLink is another).
+
+| | JPA | Hibernate |
+|---|---|---|
+| **What it is** | A specification / API — defines *how* to persist objects | A framework that *implements* that specification |
+| **Provides** | Annotations (`@Entity`, `@Id`, `@Column`), the `EntityManager` API, JPQL | The actual runtime that turns your mapped objects into SQL |
+| **Package** | `jakarta.persistence.*` | `org.hibernate.*` |
+| **Role** | Says *what* the contract is | Does *the work* behind the contract |
+
+- Both arrive via **one** dependency: `spring-boot-starter-data-jpa` pulls in the
+  JPA API jar (`jakarta.persistence-api`) **and** Hibernate (`hibernate-core`).
+  Check `mvn dependency:tree` / the IDE's Dependency Hierarchy to see both.
+- **Watch the imports.** In this project everything comes from
+  `jakarta.persistence.*` — e.g. `@Entity` is `jakarta.persistence.Entity`, not
+  `org.hibernate.annotations.Entity`. That means we code against **JPA** and let
+  Hibernate be the implementation underneath.
+- **Why avoid Hibernate annotations directly?** To not lock into Hibernate. If
+  you stick to the JPA API, you could swap the implementation (e.g. to
+  EclipseLink/Toplink) without rewriting your entities.
+
+> ⚠️ Some annotations exist in **both** packages (e.g. `@Entity`). When the IDE
+> offers `jakarta.persistence.Entity` *and* `org.hibernate.annotations.Entity`,
+> pick the `jakarta.persistence` one to stay on the standard API.
+
+**Takeaway:** always code to **JPA** (`jakarta.persistence.*`); use **Hibernate**
+as the implementation that runs it.
+
 ## How it looks in this project
 
 ### 1. The entity — map a class to a table (JPA)
