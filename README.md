@@ -6,56 +6,106 @@ A practice project for learning Spring Boot, built with Maven and Kotlin/Java.
 
 Concise references written while working through the course:
 
-- [Maven](docs/maven-notes.md) — the build tool: the POM, dependencies (direct vs
+- [Maven](docs/build-tools/maven-notes.md) — the build tool: the POM, dependencies (direct vs
   transitive), plugins/goals, the build lifecycle, and the key `mvn` commands.
-- [Gradle](docs/gradle-notes.md) — the Maven alternative: `build.gradle` vs
+- [Gradle](docs/build-tools/gradle-notes.md) — the Maven alternative: `build.gradle` vs
   `settings.gradle`, the Java/Spring Boot plugins, why its DSL and incremental
   builds are faster, and a Maven-vs-Gradle comparison.
-- [Spring vs Spring MVC vs Spring Boot](docs/spring-stack-notes.md) — how the
+- [Spring vs Spring MVC vs Spring Boot](docs/spring-boot/spring-stack-notes.md) — how the
   three layers relate (core IoC container → web module → auto-configured
   turnkey assembly) and the Starters that bundle them.
-- [Spring Beans](docs/beans-notes.md) — what a "bean" is: an object whose
+- [Spring Beans](docs/spring-boot/beans-notes.md) — what a "bean" is: an object whose
   lifecycle Spring manages and injects for you (IoC) — plus why DI pays off:
   programming to an interface to swap implementations (e.g. a new payment
   method, or cache vs. remote data source) without touching the consumers.
-- [Auto-Configuration](docs/auto-configuration-notes.md) — how Spring Boot
+- [Auto-Configuration](docs/spring-boot/auto-configuration-notes.md) — how Spring Boot
   auto-wires beans, where the configs live, and the `@Conditional...` rules
   that activate them.
-- [DispatcherServlet & Request Flow](docs/dispatcher-servlet-notes.md) — how an
+- [DispatcherServlet & Request Flow](docs/spring-boot/dispatcher-servlet-notes.md) — how an
   HTTP request travels through the front controller to your controller and back.
-- [@Controller vs @RestController & JSON](docs/rest-controller-json-notes.md) —
+- [@Controller vs @RestController & JSON](docs/spring-boot/rest-controller-json-notes.md) —
   view names vs. response bodies, why `@RestController` drops `@ResponseBody`, and
   how Jackson serializes a returned bean/list to JSON automatically.
-- [DevTools](docs/devtools-notes.md) — automatic application restart on code or
+- [DevTools](docs/spring-boot/devtools-notes.md) — automatic application restart on code or
   property changes during development.
-- [Profiles](docs/profiles-notes.md) — environment-specific configuration
+- [Profiles](docs/spring-boot/profiles-notes.md) — environment-specific configuration
   (dev/test/prod) via profile files and `@Profile` beans.
-- [@ConfigurationProperties](docs/configuration-properties-notes.md) — binding a
+- [@ConfigurationProperties](docs/spring-boot/configuration-properties-notes.md) — binding a
   group of external properties onto a typed config class by prefix.
-- [Actuator](docs/actuator-notes.md) — production-ready monitoring endpoints
+- [Actuator](docs/spring-boot/actuator-notes.md) — production-ready monitoring endpoints
   (health, metrics, env…) and how to expose them.
-- [JSP & View Resolver](docs/jsp-notes.md) — server-rendered HTML views: how a
+- [JSP & View Resolver](docs/spring-boot/jsp-notes.md) — server-rendered HTML views: how a
   controller returns a view name and the resolver's prefix/suffix turn it into a
   JSP file.
-- [Spring MVC Forms](docs/spring-mvc-forms-notes.md) — command beans, two-way
+- [Spring MVC Forms](docs/spring-boot/spring-mvc-forms-notes.md) — command beans, two-way
   binding with the `<form:…>` tags, and server-side validation (`@Valid`,
   `@Size`, `BindingResult`, `<form:errors>`) — plus the Kotlin specifics.
-- [Model & @SessionAttributes](docs/session-attributes-notes.md) — passing data
+- [Model & @SessionAttributes](docs/spring-boot/session-attributes-notes.md) — passing data
   controller → view via the request-scoped `Model`, and keeping a value (the
   logged-in name) across requests with `@SessionAttributes` / `@SessionAttribute`.
-- [Spring Security](docs/spring-security-notes.md) — authentication and
+- [Spring Security](docs/spring-boot/spring-security-notes.md) — authentication and
   authorization with `spring-boot-starter-security`: an in-memory user, BCrypt
   password hashing, URL rules and form login/logout, CSRF tokens, and the
   dispatcher-type fix for JSP forwards.
-- [JPA, Spring Data JPA & H2](docs/jpa-h2-notes.md) — storing todos in a database
+- [JPA, Spring Data JPA & H2](docs/spring-boot/jpa-h2-notes.md) — storing todos in a database
   with little/no SQL: the JDBC → Spring JDBC → JPA → Spring Data JPA evolution,
   `@Entity` mapping, a `JpaRepository` with derived queries, a `CommandLineRunner`
   that exercises the repo at startup, and when to use the in-memory H2 database
   (learning/tests vs. a real server DB).
-- [Spring Data REST](docs/spring-data-rest-notes.md) — auto-exposing a repository
+- [Spring Data REST](docs/spring-boot/spring-data-rest-notes.md) — auto-exposing a repository
   as a REST API (`/api/notes`) with no controller: the `Note` entity +
   `@RepositoryRestResource`, paging/sorting, the one-repository-per-entity gotcha,
   and keeping `TodoRepository` private via `detection-strategy=annotated`.
+
+## Modern API Development
+
+Framework-agnostic notes on API design and operation — the concepts that apply
+whether the API is built with Spring Boot, Django REST Framework, or Node.js.
+Based on Coursera's
+[Modern API Development](https://www.coursera.org/learn/modern-api-development) course:
+
+- [API Fundamentals](docs/api/api-fundamentals-notes.md) — the starting point:
+  what an API is (a contract between software), why use one (abstraction, reuse,
+  decoupling, interoperability), the client–server request/response model, HTTP
+  methods and status codes, and REST basics.
+- [API Versioning](docs/api/api-versioning-notes.md) — managing change without
+  breaking existing clients: why it matters (backward compatibility, controlled
+  evolution), the four strategies (URI/path, query parameter, header, content
+  negotiation) with their trade-offs and on-the-wire examples, the choose →
+  version-on-breaking-change → document → deploy gradually → deprecate workflow,
+  and managing multiple live versions (parallel support, LTS, feature flags,
+  deprecation vs sunset policies, and communication best practices).
+- [JSON & XML Serialization](docs/api/serialization-notes.md) — turning in-memory
+  objects into transferable data and back: the serialize → transfer → deserialize
+  flow, JSON (lightweight key–value, weak schema) and XML (verbose tag-based,
+  strong schema), and a side-by-side comparison.
+- [Robust Data Handling](docs/api/data-handling-notes.md) — seven practices for
+  predictable, secure APIs: consistent formats/schemas, server-side validation,
+  transparent errors, thoughtful transformation, security (size limits, authn/authz,
+  masking), logging/monitoring, and testing under load.
+- [Data Transformation](docs/api/data-transformation-notes.md) — reshaping data
+  between systems: why it's needed, normalization vs denormalization (OLTP vs
+  OLAP), mapping vs format conversion, and the common tool categories (ETL, big
+  data, middleware, schema validation).
+- [Asynchronous APIs](docs/api/async-apis-notes.md) — non-blocking communication: key
+  features, the request → background processing → event notification → response
+  flow, WebSockets for real-time bidirectional communication, and message queues
+  for decoupling, scalability, and reliable delivery.
+- [Caching Strategies](docs/api/caching-notes.md) — why cache, the types by
+  location (client, server, reverse proxy, CDN), the four strategies on a
+  read/write axis (cache-aside, read-through, write-through, write-back),
+  invalidation *mechanisms* (TTL, manual, versioning), and the *goals* they serve
+  (freshness, consistency) — with the mechanisms-vs-properties framing.
+- [Rate Limiting & Throttling](docs/api/rate-limiting-throttling-notes.md) —
+  controlling traffic for stability and fairness: rate-limiting algorithms (fixed
+  window, sliding window, token bucket, leaky bucket), throttling strategies
+  (request delays, dynamic limits, fair usage), and the "blocks vs slows"
+  distinction between the two.
+- [Performance Metrics](docs/api/performance-metrics-notes.md) — measuring API
+  health: latency vs response time (speed), throughput & error rate (reliability
+  under load), availability, uptime & SLA compliance (stability), and the tooling
+  to collect/visualize/alert (Actuator + Micrometer → Prometheus → Grafana, or
+  cloud-native stacks; plus the metrics/logs/traces observability pillars).
 
 ## Testing examples
 
@@ -105,6 +155,10 @@ src/main/resources/
 └── application.yaml           # configuration
 
 docs/                          # study notes (see above)
+├── spring-boot/               # Spring Boot & Spring MVC concepts
+├── build-tools/               # Maven, Gradle
+├── api/                       # framework-agnostic API topics
+└── testing/                   # testing notes
 ```
 
 ## More
