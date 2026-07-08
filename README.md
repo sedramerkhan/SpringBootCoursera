@@ -1,10 +1,12 @@
-# Coursera — Spring Boot Learning Project
+# Coursera — Java & Spring Boot Learning Notes
 
-A practice project for learning Spring Boot, built with Maven and Kotlin/Java.
+A practice project and study-notes repository spanning several Coursera courses,
+built with Maven and Kotlin/Java. Notes are concise references written while
+working through each course, grouped by course below.
 
 ## Study Notes
 
-Concise references written while working through the course:
+### Spring Boot & Spring MVC
 
 - [Maven](docs/build-tools/maven-notes.md) — the build tool: the POM, dependencies (direct vs
   transitive), plugins/goals, the build lifecycle, and the key `mvn` commands.
@@ -57,7 +59,7 @@ Concise references written while working through the course:
   `@RepositoryRestResource`, paging/sorting, the one-repository-per-entity gotcha,
   and keeping `TodoRepository` private via `detection-strategy=annotated`.
 
-## Modern API Development
+### Modern API Development
 
 Framework-agnostic notes on API design and operation — the concepts that apply
 whether the API is built with Spring Boot, Django REST Framework, or Node.js.
@@ -106,6 +108,23 @@ Based on Coursera's
   under load), availability, uptime & SLA compliance (stability), and the tooling
   to collect/visualize/alert (Actuator + Micrometer → Prometheus → Grafana, or
   cloud-native stacks; plus the metrics/logs/traces observability pillars).
+### Java Database Engineering: Spring Boot MVC & SQL Mastery
+
+The current course. Its SQL notes have their own indexed reference —
+**see [docs/sql/](docs/sql/README.md)** for the full learning path, a
+command → note lookup, and the five command categories.
+
+*Module 1 — SQL Primer (in progress):*
+
+- **Foundations** — [Databases & SQL Intro](docs/sql/databases-and-sql-intro-notes.md)
+- **Defining structure (DDL)** — [DDL: Creating, Altering & Dropping Tables](docs/sql/ddl-notes.md) ·
+  [Data Types](docs/sql/data-types-notes.md) · [Table Constraints](docs/sql/table-constraints-notes.md)
+- **Manipulating data (DML)** — [DML: Insert / Update / Delete](docs/sql/dml-notes.md)
+- **Querying (DQL)** — [SELECT / WHERE / ORDER BY / GROUP BY / HAVING / aggregates](docs/sql/dql-notes.md)
+- **Access control (DCL)** — [GRANT / REVOKE](docs/sql/dcl-notes.md)
+- **Transactions (TCL)** — [COMMIT / ROLLBACK / SAVEPOINT](docs/sql/tcl-notes.md)
+- **Functions** — [String Functions](docs/sql/string-functions-notes.md)
+- **Best practices** — [Best Practices & Pitfalls](docs/sql/best-practices-notes.md)
 
 ## Testing examples
 
@@ -158,6 +177,7 @@ docs/                          # study notes (see above)
 ├── spring-boot/               # Spring Boot & Spring MVC concepts
 ├── build-tools/               # Maven, Gradle
 ├── api/                       # framework-agnostic API topics
+├── sql/                       # SQL & relational database concepts
 └── testing/                   # testing notes
 ```
 
