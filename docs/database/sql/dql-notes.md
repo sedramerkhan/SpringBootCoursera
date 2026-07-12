@@ -1,8 +1,9 @@
 # Data Query Language (DQL) — Notes
 
 **DQL** is the category for **retrieving** data — reading, not changing. It
-centers on `SELECT`, refined by clauses that **filter** (`WHERE`), **group**
-(`GROUP BY` / `HAVING`), **sort** (`ORDER BY`), and **cap** (`LIMIT`) the result.
+centers on `SELECT`, refined by clauses that **filter** (`WHERE`, `LIKE`),
+**dedupe** (`DISTINCT`), **group** (`GROUP BY` / `HAVING`), **sort**
+(`ORDER BY`), and **cap** (`LIMIT`) the result.
 One of the [five SQL command categories](databases-and-sql-intro-notes.md#what-is-sql).
 
 ## `SELECT` — retrieve columns
@@ -43,6 +44,28 @@ WHERE caller_id = 505
   AND call_date BETWEEN '2026-07-01' AND '2026-07-31';
 ```
 
+### `LIKE` — pattern matching
+
+Matches a column against a text **pattern** inside `WHERE`. Two wildcards:
+`%` (any number of characters, including zero) and `_` (exactly one character).
+Most database engines run `LIKE` **case-insensitively** by default.
+
+```sql
+-- supplier names starting with "CA" (e.g. "California Corp")
+SELECT supplier_id, name, address FROM supplier
+WHERE name LIKE 'CA%';
+```
+
+## `DISTINCT` — unique rows only
+
+Placed right after `SELECT`; removes duplicate rows from the result so each
+combination of the selected column(s) appears once.
+
+```sql
+-- each roll number appears once, sorted by age
+SELECT DISTINCT roll_number FROM student ORDER BY age;
+```
+
 ## Aggregate functions
 
 Aggregates collapse **many rows into a single value**. The common five:
@@ -60,6 +83,10 @@ SELECT SUM(total_amount)     AS revenue       FROM orders;
 SELECT AVG(age)              AS avg_age        FROM student;
 ```
 
+`SUM`/`AVG`/`MIN`/`MAX` need a **numeric** column. All of them (and
+`COUNT(column)`, unlike `COUNT(*)`) **ignore `NULL`s** — a `NULL` row isn't
+treated as `0`, it's simply excluded from the calculation.
+
 ## `GROUP BY` — aggregate per group
 
 Without `GROUP BY`, an aggregate reduces the **whole table** to one row.
@@ -70,7 +97,15 @@ Without `GROUP BY`, an aggregate reduces the **whole table** to one row.
 SELECT product_id, SUM(quantity) AS total_sold
 FROM orders
 GROUP BY product_id;
+
+-- highest / lowest commission rate, per work area
+SELECT working_area, MAX(commission) AS max_commission FROM agent GROUP BY working_area;
+SELECT working_area, MIN(commission) AS min_commission FROM agent GROUP BY working_area;
 ```
+
+`GROUP BY` is **optional** for an aggregate, not required — `MIN(commission)`
+alone (no `GROUP BY`) returns the single lowest commission across the whole
+table; adding `GROUP BY working_area` returns the lowest **per area** instead.
 
 > **Rule:** every column in the `SELECT` list that is *not* inside an aggregate
 > must appear in `GROUP BY`. (Here `product_id` is grouped; `SUM(quantity)` is
@@ -100,6 +135,44 @@ HAVING SUM(quantity) > 100;
 You can use both together: `WHERE` trims the rows that feed the groups, then
 `HAVING` trims the resulting groups.
 
+## Subqueries — nesting a query inside another
+
+A **subquery** (inner query) is a `SELECT` nested inside another query's
+`WHERE`, `FROM`, or `SELECT` clause; the outer query uses its result. A
+**correlated** subquery references a column from the **outer** query, so it
+re-runs **once per outer row** rather than just once.
+
+```sql
+-- authors with more than 5 books — the inner COUNT is recomputed per author
+SELECT A.name
+FROM Authors AS A
+WHERE (
+    SELECT COUNT(BA.book_id)
+    FROM book_author AS BA
+    WHERE BA.author_id = A.id
+) > 5;
+```
+
+`BA.author_id = A.id` ties the subquery to the current outer row (`A`), making
+it correlated; the outer `WHERE` then keeps only authors whose book count
+exceeds `5`.
+
+This same result is usually expressible with a `JOIN` + [`GROUP BY` /
+`HAVING`](#having--filter-groups) instead, which most engines optimize better:
+
+```sql
+SELECT A.name
+FROM Authors AS A
+JOIN book_author AS BA ON BA.author_id = A.id
+GROUP BY A.id, A.name
+HAVING COUNT(BA.book_id) > 5;
+```
+
+Prefer the `JOIN`/`HAVING` form for cases like this; reach for a subquery when
+there's no natural join shape (e.g. comparing a row against an aggregate over
+a *different* table). See also: [pitfall — over-using
+subqueries](best-practices-notes.md#common-pitfalls-to-avoid).
+
 ## `ORDER BY` — sort the result
 
 Sorts by a column or alias, ascending (`ASC`, the default) or descending
@@ -109,13 +182,35 @@ Sorts by a column or alias, ascending (`ASC`, the default) or descending
 SELECT student_id, name, age FROM student ORDER BY age DESC;
 ```
 
-## `LIMIT` — cap the rows returned
-
-Returns at most N rows — often paired with `ORDER BY` for "top N".
+Sort by **multiple columns** — each can pick its own direction independently;
+later columns break ties left by earlier ones.
 
 ```sql
-... ORDER BY total_sold DESC LIMIT 5;
+-- roll number ascending; within a tie, name descending
+SELECT name, roll_number FROM student_detail ORDER BY roll_number ASC, name DESC;
 ```
+
+## `LIMIT` — cap the rows returned
+
+Returns at most N rows — often paired with `ORDER BY` for "top N". An optional
+`OFFSET` skips that many rows first (defaults to `0`).
+
+```sql
+SELECT * FROM student LIMIT 3;              -- first 3 rows
+
+... ORDER BY total_sold DESC LIMIT 5;       -- top 5
+
+SELECT * FROM student LIMIT 3 OFFSET 3;     -- skip 3, then take the next 3
+```
+
+### Where `LIMIT` can't be used
+
+- **Inside a view definition** — a view represents the *complete* result set,
+  not a truncated slice.
+- **Inside most nested/subquery expressions** — e.g. a scalar subquery expected
+  to return a single value can't cap itself with `LIMIT`. The exception is a
+  subquery used as a **table expression in `FROM`**, which can use `LIMIT`
+  freely since it's producing its own independent result set.
 
 ## Clause order
 
@@ -165,7 +260,15 @@ WHERE caller_id = 505
 
 - DQL **reads** data without modifying it.
 - `SELECT` retrieves columns (`*` for all) and computed expressions (`AS` to
-  alias); `WHERE` filters rows; `ORDER BY` sorts; `LIMIT` caps.
-- **Aggregates** (`COUNT`/`SUM`/`AVG`/`MIN`/`MAX`) collapse rows; `GROUP BY`
-  makes them per-group; `HAVING` filters groups (`WHERE` filters rows).
+  alias); `WHERE` filters rows (`LIKE` for pattern matches); `DISTINCT` dedupes;
+  `ORDER BY` sorts (one or more columns, each with its own direction); `LIMIT`
+  caps (optionally with `OFFSET` to skip rows first — but not in views or most
+  subquery expressions).
+- **Aggregates** (`COUNT`/`SUM`/`AVG`/`MIN`/`MAX`) collapse rows and need a
+  numeric column (except `COUNT`), ignoring `NULL`s rather than treating them
+  as `0`; `GROUP BY` makes them per-group (optional, not required) and
+  `HAVING` filters groups (`WHERE` filters rows).
+- A **subquery** nests a `SELECT` inside another query; **correlated**
+  subqueries reference the outer row and re-run per row — often rewritable as
+  a `JOIN` + `GROUP BY`/`HAVING`.
 - Written order: `SELECT → FROM → WHERE → GROUP BY → HAVING → ORDER BY → LIMIT`.

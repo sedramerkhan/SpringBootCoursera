@@ -12,8 +12,8 @@ foundations, then dip into whichever command category you need.
 
 2. **Defining structure — DDL**
    - [DDL — Create / Alter / Drop Tables](ddl-notes.md) — `CREATE TABLE`,
-     `ALTER TABLE` (add/drop/rename/modify columns), `DROP`, `TRUNCATE`,
-     `DESCRIBE`, schemas, and why `TRUNCATE` counts as DDL.
+     `ALTER TABLE` (add/drop/rename/modify columns), `AUTO_INCREMENT`, `DROP`,
+     `TRUNCATE`, `DESCRIBE`, schemas, and why `TRUNCATE` counts as DDL.
    - [Data Types](data-types-notes.md) — numeric (incl. `SMALLINT` vs `INT`),
      text, date/time, boolean.
    - [Table Constraints](table-constraints-notes.md) — `NOT NULL`, `UNIQUE`,
@@ -24,9 +24,10 @@ foundations, then dip into whichever command category you need.
      `UPDATE`, `DELETE`, and `DELETE` vs `TRUNCATE` vs `DROP`.
 
 4. **Querying — DQL**
-   - [DQL](dql-notes.md) — `SELECT`, `WHERE`, `ORDER BY`, `LIMIT`, aggregate
-     functions (`COUNT`/`SUM`/`AVG`/`MIN`/`MAX`), `GROUP BY`, and `HAVING`
-     (vs `WHERE`).
+   - [DQL](dql-notes.md) — `SELECT`, `WHERE` (incl. `LIKE` pattern matching),
+     `DISTINCT`, `ORDER BY` (multi-column), `LIMIT`/`OFFSET`, aggregate
+     functions (`COUNT`/`SUM`/`AVG`/`MIN`/`MAX`), `GROUP BY`, `HAVING`
+     (vs `WHERE`), and subqueries (incl. correlated).
 
 5. **Access control — DCL**
    - [DCL](dcl-notes.md) — `GRANT`, `REVOKE`.
@@ -37,7 +38,7 @@ foundations, then dip into whichever command category you need.
 
 7. **Functions**
    - [String Functions](string-functions-notes.md) — `CONCAT`, `SUBSTRING`,
-     `UPPER`/`LOWER`, `LENGTH`.
+     `UPPER`/`LOWER`, `LENGTH`, `REPLACE`.
 
 8. **Best practices** (module wrap-up)
    - [Best Practices & Pitfalls](best-practices-notes.md) — naming, comments,
@@ -53,11 +54,12 @@ foundations, then dip into whichever command category you need.
 | `INT`, `VARCHAR`, `DECIMAL`, `DATE`, `BOOLEAN`, … | DDL | [Data Types](data-types-notes.md) |
 | `PRIMARY KEY`, `FOREIGN KEY`, `UNIQUE`, `CHECK`, `NOT NULL` | DDL | [Table Constraints](table-constraints-notes.md) |
 | `ALTER TABLE … ADD/DROP/RENAME/MODIFY` | DDL | [DDL](ddl-notes.md#alter-table) |
+| `AUTO_INCREMENT` | DDL | [DDL](ddl-notes.md#auto-increment) |
 | `INSERT INTO`, `UPDATE`, `DELETE` | DML | [DML](dml-notes.md) |
-| `SELECT`, `WHERE`, `ORDER BY`, `LIMIT`, `GROUP BY`, `HAVING`, aggregates | DQL | [DQL](dql-notes.md) |
+| `SELECT`, `WHERE`, `LIKE`, `DISTINCT`, `ORDER BY`, `LIMIT`/`OFFSET`, `GROUP BY`, `HAVING`, aggregates, subqueries | DQL | [DQL](dql-notes.md) |
 | `GRANT`, `REVOKE` | DCL | [DCL](dcl-notes.md) |
 | `COMMIT`, `ROLLBACK`, `SAVEPOINT` | TCL | [TCL](tcl-notes.md) |
-| `CONCAT`, `SUBSTRING`, `UPPER`, `LOWER`, `LENGTH` | — | [String Functions](string-functions-notes.md) |
+| `CONCAT`, `SUBSTRING`, `UPPER`, `LOWER`, `LENGTH`, `REPLACE` | — | [String Functions](string-functions-notes.md) |
 
 ## The five command categories
 

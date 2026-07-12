@@ -57,6 +57,41 @@ CREATE TABLE course (
 
 Here `course_id` is the primary key, so each course is uniquely identifiable.
 
+### Auto-increment
+
+`AUTO_INCREMENT` (MySQL) makes a column **auto-generate a unique, sequential
+value** for every new row, removing the need to assign IDs manually. It's most
+often paired with `PRIMARY KEY`, but isn't limited to it — any column that
+needs guaranteed-unique values (e.g. one with a `UNIQUE` constraint) can use
+it. By default it **starts at 1** and **increases by 1** per row.
+
+```sql
+CREATE TABLE student (
+    id         INT PRIMARY KEY AUTO_INCREMENT,
+    first_name VARCHAR(25) NOT NULL,
+    last_name  VARCHAR(25),
+    age        INT
+);
+
+-- id is omitted — the database fills it in (1, 2, 3, ...)
+INSERT INTO student (first_name, last_name, age) VALUES ('Rahul', 'Sharma', 21);
+INSERT INTO student (first_name, last_name, age) VALUES ('Aakash', 'Gupta', 22);
+```
+
+**Changing the starting value** — `ALTER TABLE ... AUTO_INCREMENT = n`. This
+only affects **rows inserted after** the change; existing rows keep their IDs.
+
+```sql
+ALTER TABLE student AUTO_INCREMENT = 100;
+
+-- next insert (omitting id) gets 100, not 4
+INSERT INTO student (first_name, last_name, age) VALUES ('David', 'Lee', 20);
+```
+
+See also: [`TRUNCATE`](#truncate--empty-the-table) resets an auto-increment
+counter back to its start value, unlike `DELETE` (see
+[DML — `DELETE` vs `DROP` vs `TRUNCATE`](dml-notes.md#delete-vs-drop-vs-truncate)).
+
 ## `ALTER TABLE`
 
 Changes an **existing** table's structure, so the schema can evolve without
@@ -177,9 +212,11 @@ CREATE SCHEMA schema_name;                      -- create a logical container
 
 - DDL = the **structure-defining** category: `CREATE`, `ALTER`, `DROP`,
   `TRUNCATE`.
-- `CREATE TABLE` defines columns + types (+ optional constraints); `ALTER TABLE`
-  adds/drops/renames/retypes columns; `DROP` removes the table; `TRUNCATE`
-  empties it; `DESCRIBE` inspects structure.
+- `CREATE TABLE` defines columns + types (+ optional constraints, incl.
+  `AUTO_INCREMENT` for auto-generated sequential values); `ALTER TABLE`
+  adds/drops/renames/retypes columns (and can reset the auto-increment start
+  value); `DROP` removes the table; `TRUNCATE` empties it; `DESCRIBE` inspects
+  structure.
 - Schemas group related objects into a named container.
 - For column types and constraints see [Data Types](data-types-notes.md) and
   [Table Constraints](table-constraints-notes.md).

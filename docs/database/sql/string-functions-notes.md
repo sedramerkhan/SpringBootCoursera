@@ -12,6 +12,7 @@ a [DQL](dql-notes.md) query, often with `AS` to name the computed column (an
 | `UPPER(str)` | Converts to uppercase |
 | `LOWER(str)` | Converts to lowercase |
 | `LENGTH(str)` | Returns the number of characters |
+| `REPLACE(str, old, new)` | Replaces every occurrence of `old` with `new` |
 
 ## `CONCAT` — combine strings
 
@@ -52,6 +53,26 @@ SELECT CONCAT(SUBSTRING(first_name, 1, 1), ' ', last_name) AS initial_name
 FROM students;
 ```
 
+## `REPLACE` — swap a substring
+
+`REPLACE(string, old_substring, new_substring)` scans `string` and swaps
+**every** occurrence of `old_substring` for `new_substring` — useful for
+cleaning up or standardizing data (fixing typos, updating outdated values).
+
+Unlike the functions above, `REPLACE` is typically used inside an
+[`UPDATE`](dml-notes.md#update) to rewrite stored data, not just to shape a
+`SELECT`'s output:
+
+```sql
+-- rewrite every "Python" course to "C++"
+UPDATE subject
+SET course = REPLACE(course, 'Python', 'C++')
+WHERE course LIKE 'Python%';
+```
+
+The `WHERE` still scopes which **rows** get updated; `REPLACE` itself only
+touches the substring match within the `course` value.
+
 ## Case & length
 
 ```sql
@@ -64,7 +85,8 @@ SELECT LENGTH(first_name) AS name_length     FROM students;   -- 4
 
 - `CONCAT` combines strings; `SUBSTRING` extracts a piece (1-based `start`,
   then `length`).
-- `UPPER` / `LOWER` change case; `LENGTH` counts characters.
+- `UPPER` / `LOWER` change case; `LENGTH` counts characters; `REPLACE` swaps
+  every occurrence of a substring (often inside an `UPDATE` to fix stored data).
 - Use them in the `SELECT` list with `AS` to label the result; nest them to
   build more complex output.
 
