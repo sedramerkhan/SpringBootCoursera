@@ -17,17 +17,19 @@ foundations, then dip into whichever command category you need.
    - [Data Types](data-types-notes.md) — numeric (incl. `SMALLINT` vs `INT`),
      text, date/time, boolean.
    - [Table Constraints](table-constraints-notes.md) — `NOT NULL`, `UNIQUE`,
-     `CHECK`, `PRIMARY KEY`, `FOREIGN KEY`, composite constraints.
+     `CHECK`, `PRIMARY KEY`, `FOREIGN KEY` (incl. one-to-many relationships),
+     composite constraints.
 
 3. **Manipulating data — DML**
    - [DML](dml-notes.md) — `INSERT` (single/multiple rows, `NULL`, `DEFAULT`s),
      `UPDATE`, `DELETE`, and `DELETE` vs `TRUNCATE` vs `DROP`.
 
 4. **Querying — DQL**
-   - [DQL](dql-notes.md) — `SELECT`, `WHERE` (incl. `LIKE` pattern matching),
-     `DISTINCT`, `ORDER BY` (multi-column), `LIMIT`/`OFFSET`, aggregate
-     functions (`COUNT`/`SUM`/`AVG`/`MIN`/`MAX`), `GROUP BY`, `HAVING`
-     (vs `WHERE`), and subqueries (incl. correlated).
+   - [DQL](dql-notes.md) — `SELECT`, `JOIN` (combining related tables),
+     `WHERE` (incl. `LIKE` pattern matching), `DISTINCT`, `ORDER BY`
+     (multi-column), `LIMIT`/`OFFSET`, aggregate functions
+     (`COUNT`/`SUM`/`AVG`/`MIN`/`MAX`), `GROUP BY`, `HAVING` (vs `WHERE`), and
+     subqueries (incl. correlated).
 
 5. **Access control — DCL**
    - [DCL](dcl-notes.md) — `GRANT`, `REVOKE`.
@@ -53,6 +55,7 @@ foundations, then dip into whichever command category you need.
 | `CREATE TABLE`, `DROP TABLE`, `TRUNCATE`, `DESCRIBE`, schemas | DDL | [DDL](ddl-notes.md) |
 | `INT`, `VARCHAR`, `DECIMAL`, `DATE`, `BOOLEAN`, … | DDL | [Data Types](data-types-notes.md) |
 | `PRIMARY KEY`, `FOREIGN KEY`, `UNIQUE`, `CHECK`, `NOT NULL` | DDL | [Table Constraints](table-constraints-notes.md) |
+| `JOIN` (combining related tables) | DQL | [DQL](dql-notes.md#join--combining-tables) |
 | `ALTER TABLE … ADD/DROP/RENAME/MODIFY` | DDL | [DDL](ddl-notes.md#alter-table) |
 | `AUTO_INCREMENT` | DDL | [DDL](ddl-notes.md#auto-increment) |
 | `INSERT INTO`, `UPDATE`, `DELETE` | DML | [DML](dml-notes.md) |

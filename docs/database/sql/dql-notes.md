@@ -30,6 +30,41 @@ SELECT * FROM course;      -- every column (and its data)
 SELECT call_duration * rate_per_minute AS total_bill FROM call_record;
 ```
 
+## `JOIN` — combining tables
+
+Combines rows from two (or more) tables based on a related column — typically
+a [foreign key](table-constraints-notes.md#foreign-key) in one table pointing
+at a primary key in another. Plain `JOIN` (**inner join**) keeps only rows
+where the `ON` condition matches in **both** tables.
+
+```sql
+CREATE TABLE Customers (
+    CustomerID   INT PRIMARY KEY,
+    CustomerName VARCHAR(100)
+);
+
+CREATE TABLE Orders (
+    OrderID    INT PRIMARY KEY,
+    OrderDate  DATE,
+    CustomerID INT,
+    FOREIGN KEY (CustomerID) REFERENCES Customers(CustomerID)
+);
+
+-- every order, with the placing customer's name
+SELECT Customers.CustomerName, Orders.OrderID, Orders.OrderDate
+FROM Customers
+JOIN Orders ON Customers.CustomerID = Orders.CustomerID;
+```
+
+`FROM Customers` picks the starting table; `JOIN Orders ON ...` pulls in each
+`Orders` row whose `CustomerID` matches a `Customers` row. This is the
+standard way to query a [one-to-many relationship](table-constraints-notes.md#foreign-key)
+(one customer → many orders) — without the join you'd only see one side of
+the relationship at a time.
+
+> Only the plain/inner `JOIN` is covered here; `LEFT`/`RIGHT`/`FULL OUTER JOIN`
+> (which also keep non-matching rows from one side) aren't in scope yet.
+
 ## `WHERE` — filter rows
 
 Returns only rows meeting a condition. Combine conditions with `AND` / `OR`, and
@@ -259,6 +294,8 @@ WHERE caller_id = 505
 ## Summary
 
 - DQL **reads** data without modifying it.
+- `JOIN` combines rows from related tables via a foreign-key match (`ON`);
+  plain `JOIN` is an **inner join** — only matching rows survive.
 - `SELECT` retrieves columns (`*` for all) and computed expressions (`AS` to
   alias); `WHERE` filters rows (`LIKE` for pattern matches); `DISTINCT` dedupes;
   `ORDER BY` sorts (one or more columns, each with its own direction); `LIMIT`

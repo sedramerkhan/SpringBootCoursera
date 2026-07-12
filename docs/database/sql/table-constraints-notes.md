@@ -77,6 +77,35 @@ CREATE TABLE enrollment (
 );
 ```
 
+### One-to-many relationships
+
+A `FOREIGN KEY` is how SQL implements a **one-to-many relationship**: a single
+row in the **parent** table (the one being referenced) relates to many rows in
+the **child** table (the one holding the FK). Real-world examples that fit
+this shape: one **customer** places many **orders**, one **author** writes
+many **books**, one **teacher** teaches many **classes** — in each pair, the
+"many" side carries a foreign key back to the "one" side.
+
+```sql
+CREATE TABLE Customers (
+    CustomerID   INT PRIMARY KEY,
+    CustomerName VARCHAR(100)
+);
+
+CREATE TABLE Orders (
+    OrderID    INT PRIMARY KEY,
+    OrderDate  DATE,
+    CustomerID INT,
+    FOREIGN KEY (CustomerID) REFERENCES Customers(CustomerID)
+);
+```
+
+`Customers` is the parent; `Orders` is the child. The FK guarantees every
+order's `CustomerID` **must exist** in `Customers` — inserting an order with a
+nonexistent customer ID is rejected, which is exactly what keeps the "many"
+side from pointing at nothing. To read both sides together (e.g. all orders
+for a customer), see [`JOIN`](dql-notes.md#join--combining-tables).
+
 ## Adding constraints later — `ALTER TABLE`
 
 Constraints don't have to be defined up front; `ALTER TABLE` adds them
@@ -120,7 +149,8 @@ CREATE TABLE enrollments (
 - Constraints protect **data integrity**: `NOT NULL`, `UNIQUE`, `CHECK`,
   `PRIMARY KEY`, `FOREIGN KEY`.
 - `PRIMARY KEY` = `UNIQUE` + `NOT NULL`; `FOREIGN KEY` links to another table's
-  primary key for referential integrity.
+  primary key for referential integrity — the standard way to model a
+  **one-to-many relationship** (parent → many children).
 - A column can hold several constraints; a **composite** constraint enforces a
   rule across multiple columns at once.
 - Add constraints after creation with `ALTER TABLE ... ADD CONSTRAINT`.
