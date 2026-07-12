@@ -110,21 +110,42 @@ Based on Coursera's
   cloud-native stacks; plus the metrics/logs/traces observability pillars).
 ### Java Database Engineering: Spring Boot MVC & SQL Mastery
 
-The current course. Its SQL notes have their own indexed reference —
-**see [docs/sql/](docs/sql/README.md)** for the full learning path, a
-command → note lookup, and the five command categories.
+The current course. All database notes are grouped under
+**[docs/database/](docs/database/README.md)** — the hub links the three areas below.
 
-*Module 1 — SQL Primer (in progress):*
+**Module 1 — SQL Primer** ✅ — indexed reference in
+**[docs/database/sql/](docs/database/sql/README.md)** (full learning path,
+command → note lookup, the five command categories):
 
-- **Foundations** — [Databases & SQL Intro](docs/sql/databases-and-sql-intro-notes.md)
-- **Defining structure (DDL)** — [DDL: Creating, Altering & Dropping Tables](docs/sql/ddl-notes.md) ·
-  [Data Types](docs/sql/data-types-notes.md) · [Table Constraints](docs/sql/table-constraints-notes.md)
-- **Manipulating data (DML)** — [DML: Insert / Update / Delete](docs/sql/dml-notes.md)
-- **Querying (DQL)** — [SELECT / WHERE / ORDER BY / GROUP BY / HAVING / aggregates](docs/sql/dql-notes.md)
-- **Access control (DCL)** — [GRANT / REVOKE](docs/sql/dcl-notes.md)
-- **Transactions (TCL)** — [COMMIT / ROLLBACK / SAVEPOINT](docs/sql/tcl-notes.md)
-- **Functions** — [String Functions](docs/sql/string-functions-notes.md)
-- **Best practices** — [Best Practices & Pitfalls](docs/sql/best-practices-notes.md)
+- **Foundations** — [Databases & SQL Intro](docs/database/sql/databases-and-sql-intro-notes.md)
+- **Defining structure (DDL)** — [DDL: Creating, Altering & Dropping Tables](docs/database/sql/ddl-notes.md) ·
+  [Data Types](docs/database/sql/data-types-notes.md) · [Table Constraints](docs/database/sql/table-constraints-notes.md)
+- **Manipulating data (DML)** — [DML: Insert / Update / Delete](docs/database/sql/dml-notes.md)
+- **Querying (DQL)** — [SELECT / WHERE / ORDER BY / GROUP BY / HAVING / aggregates](docs/database/sql/dql-notes.md)
+- **Access control (DCL)** — [GRANT / REVOKE](docs/database/sql/dcl-notes.md)
+- **Transactions (TCL)** — [COMMIT / ROLLBACK / SAVEPOINT](docs/database/sql/tcl-notes.md)
+- **Functions** — [String Functions](docs/database/sql/string-functions-notes.md)
+- **Best practices** — [Best Practices & Pitfalls](docs/database/sql/best-practices-notes.md)
+
+**Functions, Stored Procedures & Triggers** (Oracle PL/SQL) — indexed reference in
+**[docs/database/plsql/](docs/database/plsql/README.md)**:
+
+- **Subprograms** — [Functions & Procedures](docs/database/plsql/subprograms-notes.md) —
+  local vs stored, header (`RETURN`/`IS`/`AS`), parameter modes, functions
+  (incl. recursion) vs procedures (`OUT` params), stored-procedure benefits.
+- **Triggers** — [Triggers](docs/database/plsql/triggers-notes.md) — DML/DDL/logon events,
+  timing, `:NEW`/`:OLD`, advantages & disadvantages.
+
+**Indexes** (DBMS indexing structures; in progress) — [docs/database/indexing/](docs/database/indexing/README.md):
+
+- **Ordered Indices** — [Ordered Indices](docs/database/indexing/ordered-indices-notes.md) —
+  search keys, clustering vs secondary, dense vs sparse, multilevel indices, and
+  index updates on insert/delete.
+- **B-Tree Indexing** — [B-Tree](docs/database/indexing/b-tree-notes.md) —
+  balanced m-way tree, order/properties, B-tree vs B+ tree, search/insert/delete.
+- **B+ Tree Indexing** — [B+ Tree](docs/database/indexing/b-plus-tree-notes.md) —
+  data in linked leaves, higher fan-out, range scans, insert/delete/update; the
+  standard DB index.
 
 ## Testing examples
 
@@ -177,7 +198,10 @@ docs/                          # study notes (see above)
 ├── spring-boot/               # Spring Boot & Spring MVC concepts
 ├── build-tools/               # Maven, Gradle
 ├── api/                       # framework-agnostic API topics
-├── sql/                       # SQL & relational database concepts
+├── database/                  # the DB course: grouped notes
+│   ├── sql/                   #   SQL & relational database concepts
+│   ├── plsql/                 #   Oracle PL/SQL (procedural SQL)
+│   └── indexing/              #   DBMS indexing structures
 └── testing/                   # testing notes
 ```
 
