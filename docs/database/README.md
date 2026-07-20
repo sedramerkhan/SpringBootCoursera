@@ -7,8 +7,9 @@ grouped into four areas. Each has its own indexed reference:
   constraints, DML, DQL (incl. aggregates/grouping), DCL, TCL, string functions,
   and best practices. Organized by the five command categories.
 - **[Advanced SQL](advanced-sql/README.md)** — relational design and query
-  techniques beyond the Primer: normalization (1NF–BCNF), and — as they land —
-  JOIN types and window functions.
+  techniques beyond the Primer: normalization (1NF–BCNF), JOIN types (cross,
+  inner, left/right, advanced/multi-join), and window functions
+  (`PARTITION BY`, ranking/distribution functions).
 - **[PL/SQL](plsql/README.md)** — Oracle's procedural extension: subprograms
   (functions & procedures) and triggers.
 - **[Indexing](indexing/README.md)** — DBMS indexing structures: ordered indices
