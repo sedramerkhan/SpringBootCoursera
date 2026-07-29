@@ -1,4 +1,4 @@
-# Database Normalization — Notes
+# Normalization & Denormalization — Notes
 
 **Normalization** is the process of organizing tables to minimize **data
 redundancy** and prevent **data anomalies**, by structuring data so each fact
@@ -7,6 +7,17 @@ builds on [primary/foreign keys](../sql/table-constraints-notes.md) and the
 [one-to-many relationships](../sql/table-constraints-notes.md#one-to-many-relationships)
 they enforce.
 
+## Features of good relational design
+
+- **Minimal redundancy** — reduces storage and the risk of inconsistent
+  copies of the same fact.
+- **Easy update/deletion** — data can be modified without anomalies; changes
+  and removals don't create integrity issues elsewhere.
+- **Support for data integrity** — enforced rules keep stored data accurate
+  and consistent with real-world constraints and relationships.
+- **Optimal data retrieval** — effective querying/access, which matters most
+  as a database grows.
+
 ## Why normalize
 
 - **Minimizes redundancy** — each piece of information stored **once**, saving
@@ -14,6 +25,29 @@ they enforce.
 - **Prevents anomalies** during insert/update/delete (see below).
 - **Preserves integrity** — enforcing dependency rules keeps relationships and
   constraints accurate, making retrieval and manipulation more reliable.
+
+## Functional dependency & decomposition
+
+**Functional dependency (FD)** is the theory underpinning normalization.
+Attribute `B` is **functionally dependent** on attribute `A` (written
+`A → B`, "`A` determines `B`") if every valid value of `A` corresponds to
+exactly one value of `B`. E.g. in a customer table, `customer_id →
+customer_address` — a given customer ID always maps to the same address.
+FDs are what let you formalize *which* attributes belong together in the
+same table, and are the basis normal forms are defined against.
+
+Normalization proceeds by **decomposing** a table into smaller tables along
+its functional dependencies, to remove redundancy and update anomalies:
+
+| Decomposition | Effect |
+|---|---|
+| **Lossless** | The original relation `R` can be **exactly reconstructed** by joining the decomposed tables back together — no data is lost or fabricated |
+| **Lossy** | Joining the decomposed tables back together loses information or introduces spurious rows not in the original data |
+
+**Example** — decomposing `R(A, B, C)` into `R1` and `R2` on `B` is lossless
+only if joining `R1 ⋈ R2` on `B` reproduces `R` exactly. A decomposition that
+can't guarantee that reconstruction isn't safe to use — every normal form
+below assumes its decomposition step is lossless.
 
 ## Data redundancy & anomalies
 
@@ -191,6 +225,48 @@ candidate keys**. the Boyce-Codd normal form tightens the rule: for every depend
 alone must already be a super key. It's a stricter version of 3NF used when
 those more complex, overlapping-key dependencies show up.
 
+**Example — a table not in BCNF:**
+
+| student_id | course_id | instructor |
+|---|---|---|
+| 1 | Maths | Mr. Smith |
+| 2 | Maths | Mr. Smith |
+| 1 | Science | Ms. Jones |
+
+Here `(student_id, course_id) → instructor` holds, but so does
+`course_id → instructor` — and `course_id` alone is **not** a super key (it
+doesn't uniquely identify rows on its own; `Maths` appears twice). That
+determinant-that-isn't-a-super-key is exactly what BCNF forbids. Fixing it
+means the same [course/instructor split shown under
+3NF](#3nf--remove-transitive-dependency) above: pull `course_id →
+instructor` into its own `course` table, keyed by `course_id`.
+
+### BCNF vs. 3NF
+
+| | 3NF | BCNF |
+|---|---|---|
+| **Redundancy** | Can still allow some redundancy when candidate keys overlap | Removes all redundancy of this kind |
+| **Guarantee** | Preserves functional dependencies | Every determinant is a super key — stricter |
+| **Practicality** | More practical for most applications — balances normalization with performance | Best when data integrity is paramount and redundancy must be eliminated |
+
+Pick **3NF** for most applications, where some redundancy is tolerable but
+dependency preservation matters. Pick **BCNF** when redundancy itself is the
+risk to eliminate.
+
+### Goals of normalization
+
+Overall, normalization aims to:
+
+- **Achieve BCNF** where practical — structure the database so no
+  determinant fails the super-key test.
+- **Preserve lossless-join decomposition** — every split must allow exact
+  reconstruction of the original data via `JOIN`.
+- **Preserve functional dependencies** — the relationships and constraints
+  between attributes stay enforceable after decomposition.
+- **Balance normalization with performance** — full normalization isn't
+  free; see [denormalization](#denormalization) below for when to trade some
+  of it back for read speed.
+
 ## Primary & foreign keys recap
 
 - **Primary key** — uniquely identifies each row, guaranteeing no duplicates.
@@ -202,13 +278,67 @@ Normalization splits data into multiple tables; primary/foreign keys are what
 keep those split tables **correctly linked** back together (see
 [`JOIN`](../sql/dql-notes.md#join--combining-tables) to query across them).
 
+## Denormalization
+
+**Denormalization** is the reverse of normalization: deliberately combining
+normalized tables to improve **read** performance, at the cost of
+reintroducing redundancy. It's a trade-off, not a mistake — normalization
+optimizes for write-side integrity; denormalization optimizes for read-side
+speed, and which one wins depends on the workload.
+
+**Example**: separate `Order` and `Customer` tables (the normalized shape)
+get denormalized by folding `Customer` fields directly onto `Order`, so a
+query no longer needs a `JOIN` to read them together. **Pre-computing**
+values (e.g. storing an order's total instead of summing line items on every
+read) is the same idea — trade storage/redundancy for query speed.
+
+### When to consider it
+
+- **High-read, low-write workloads** — read operations vastly outnumber
+  writes, so the write-side cost of redundancy matters less than read speed.
+- **Performance-critical querying** — normalized joins are measurably too
+  slow for the required query performance.
+- **Complex queries** — normalization has pushed a query across enough
+  joined tables that the query itself has become complex and slow.
+
+This is the same normalized-OLTP vs. denormalized-OLAP split covered in
+[terminology](../database-design/terminology-notes.md#normalization-vs-denormalization)
+and in [data transformation](../../api/data-transformation-notes.md#normalization-vs-denormalization).
+
+### Trade-offs
+
+- **Extra storage** — redundant copies of the same data cost space.
+- **Update-anomaly risk returns** — redundant copies must be kept in sync;
+  miss one and data drifts inconsistent.
+- **More complex application code** — the code writing to a denormalized
+  structure has to manage that redundancy itself, since the schema no longer
+  enforces it.
+
+Denormalize only when the read-performance win is worth these costs — i.e.
+when it measurably improves query efficiency without compromising the data
+integrity the application actually depends on.
+
 ## Summary
 
+- **Good relational design** has minimal redundancy, easy update/deletion,
+  enforced data integrity, and optimal retrieval.
+- **Functional dependency** (`A → B`: `A` uniquely determines `B`) is the
+  theory normal forms are built on; normalizing means **decomposing** a
+  table along its FDs, and a decomposition must be **lossless** (the
+  original table is reconstructable via `JOIN`) to be valid.
 - Normalization reduces **redundancy** and prevents **insertion/update/deletion
   anomalies**.
 - **1NF**: atomic fields, no repeating groups. **2NF**: 1NF + no partial
   dependency (whole composite key, not part of it). **3NF**: 2NF + no
   transitive dependency (only the key, not another non-key attribute).
-  **BCNF**: every determinant is a super key — stricter than 3NF.
+  **BCNF**: every determinant is a super key — stricter than 3NF, at the
+  cost of some practicality.
+- Normalization's goals: achieve BCNF where practical, keep decomposition
+  lossless, preserve functional dependencies, and balance normalization
+  against performance.
 - Primary keys enforce uniqueness; foreign keys re-link normalized tables and
   enforce referential integrity.
+- **Denormalization** trades some of that back — merging tables /
+  pre-computing values to cut joins and speed up reads — worthwhile in
+  high-read/low-write or performance-critical scenarios, at the cost of
+  extra storage, anomaly risk, and more complex application code.

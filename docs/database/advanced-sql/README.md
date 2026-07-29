@@ -6,10 +6,13 @@ the [database notes](../README.md).
 
 ## Notes
 
-- [Database Normalization](normalization-notes.md) — data redundancy &
-  anomalies (insert/update/delete); normal forms 1NF–BCNF with worked
-  examples; primary/foreign keys as the mechanism that re-links normalized
-  tables.
+- [Normalization & Denormalization](normalization-notes.md) — features of
+  good relational design; functional dependency & lossless-vs-lossy
+  decomposition; data redundancy & anomalies (insert/update/delete); normal
+  forms 1NF–BCNF with worked examples, incl. a BCNF-vs-3NF comparison;
+  primary/foreign keys as the mechanism that re-links normalized tables; and
+  denormalization (when to use it, pre-computed values, the storage/anomaly/
+  code-complexity trade-offs).
 - [JOIN Types](join-types-notes.md) — cross join (Cartesian product, use
   cases, combining with aggregates/`WHERE`, performance caution); inner join
   in depth (use cases, combining with `GROUP BY`/aggregates/`GROUP_CONCAT`/
