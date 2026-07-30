@@ -30,6 +30,19 @@ This note covers **ordered indices**; hashing is a separate topic.
 An **index-sequential file** is a data file sorted on a search key, with a
 clustering index on that key.
 
+> **Terminology:** SQL Server and MySQL/InnoDB call this a **clustered
+> index** — same concept. Because it physically orders the table's rows on
+> disk by the indexed column, a query that **sorts or range-scans by that
+> column** (`ORDER BY`, `BETWEEN`, `>`/`<`) can read the rows already in the
+> right order, skipping a separate sort step — a direct query-performance
+> win from the clustering property above. See [choosing columns to
+> index](index-maintenance-notes.md#choosing-the-right-columns-to-index) for
+> picking a good clustered-index key, and [index
+> fragmentation](index-maintenance-notes.md#index-fragmentation) for what
+> happens when inserts land out of physical order (page splits) — the
+> reason a narrow, ever-increasing key (e.g. an identity/auto-increment
+> column) is usually the best clustered-index choice.
+
 ## Evaluating an index
 
 Choose an index type by the **access it supports** and its costs:

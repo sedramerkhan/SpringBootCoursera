@@ -18,3 +18,7 @@ the [database notes](../README.md).
 - [Hashing](hashing-notes.md) — static hashing; hash index vs hash file
   organization; bucket overflow (closed/open hashing); dynamic hashing
   (periodic rehashing, linear, extendible); hashing vs ordered indices.
+- [Index Monitoring & Maintenance](index-maintenance-notes.md) — choosing
+  columns to index (query patterns, selectivity, over-indexing); index
+  fragmentation (causes, impact); reorganize vs. rebuild; the SSMS reorganize
+  procedure; automating maintenance (scheduling, parallel rebuilds).

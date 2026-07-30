@@ -1,7 +1,7 @@
 # Database — Reference Notes
 
 The database half of **Java Database Engineering: Spring Boot MVC & SQL Mastery**,
-grouped into six areas. Each has its own indexed reference:
+grouped into eight areas. Each has its own indexed reference:
 
 - **[Database Design](database-design/README.md)** — why design drives
   performance/scalability/maintainability, the five-stage lifecycle
@@ -36,8 +36,21 @@ grouped into six areas. Each has its own indexed reference:
   automated steps, daily/weekly/monthly scheduling with Task Scheduler),
   and restoring (the SSMS procedure, the 3-2-1 rule, and why/how backups
   fail).
+- **[Data Loading](data-loading/README.md)** — importing/exporting and
+  loading/unloading data between databases and external files; real-world
+  uses (migration, backup, analytics feeds); tools and techniques (WinSQL,
+  drag-and-drop export, exporting SQL query results); plus bulk uploads
+  (partitioning, index optimization, parallel processing, SQL Server
+  `BULK INSERT`, CSV file best practices).
+- **[Monitoring](monitoring/README.md)** — real-time database health
+  tracking: key performance factors (workload, throughput, resources,
+  optimization, contention), critical KPIs (response time, throughput, open
+  connections, errors, frequent queries), monitor types (resource, network,
+  application, third-party), best practices, and an example tool (Nagios XI
+  for MS SQL Server); plus optimization techniques (caching layers, query
+  optimization, sharding, APM/logging/RUM) with Netflix/Airbnb case studies.
 
-> These six are siblings so notes cross-link freely (e.g. PL/SQL triggers →
+> These eight are siblings so notes cross-link freely (e.g. PL/SQL triggers →
 > SQL constraints, `../sql/...`). Plain **SQL** vs **PL/SQL**: SQL is the
 > declarative query language; PL/SQL is Oracle's procedural language built on top
 > of it.
