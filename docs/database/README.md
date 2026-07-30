@@ -1,7 +1,7 @@
 # Database — Reference Notes
 
 The database half of **Java Database Engineering: Spring Boot MVC & SQL Mastery**,
-grouped into eight areas. Each has its own indexed reference:
+grouped into ten areas. Each has its own indexed reference:
 
 - **[Database Design](database-design/README.md)** — why design drives
   performance/scalability/maintainability, the five-stage lifecycle
@@ -49,8 +49,22 @@ grouped into eight areas. Each has its own indexed reference:
   application, third-party), best practices, and an example tool (Nagios XI
   for MS SQL Server); plus optimization techniques (caching layers, query
   optimization, sharding, APM/logging/RUM) with Netflix/Airbnb case studies.
+- **[Data Integrity](data-integrity/README.md)** — physical vs. logical
+  integrity; why it matters; common causes of loss (human error, transfer
+  error, cyber threats, security issues, hardware failure); strategies to
+  maintain it (validation, backups, access control, audit trails, security
+  testing, encryption); enforcing it with constraints and triggers; the five
+  types (physical, entity, referential, domain, user-defined); and examples
+  by sector (healthcare, finance, education).
+- **[Big Data](big-data/README.md)** — challenges of handling large datasets
+  (storage, processing, security, data quality); scaling techniques
+  (sharding, caching, cloud migration, read/write separation); tools (Hadoop,
+  Spark, NoSQL, R, predictive/prescriptive analytics); storage strategies
+  (distributed file systems, columnar formats, partitioning, compression);
+  sector challenges (healthcare/HIPAA, cloud/GDPR); and case studies across a
+  dozen industries.
 
-> These eight are siblings so notes cross-link freely (e.g. PL/SQL triggers →
+> These ten are siblings so notes cross-link freely (e.g. PL/SQL triggers →
 > SQL constraints, `../sql/...`). Plain **SQL** vs **PL/SQL**: SQL is the
 > declarative query language; PL/SQL is Oracle's procedural language built on top
 > of it.
