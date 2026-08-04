@@ -182,7 +182,7 @@ anything whose data must outlive the process.**
 empty password) to run SQL and inspect tables. It's a **dev-only** convenience —
 keep it disabled in production. Spring Security had to be told to permit it,
 disable CSRF for it, and allow same-origin frames (see
-[`spring-security-notes.md`](./spring-security-notes.md)).
+[`spring-security-notes.md`](../security/spring-security-notes.md)).
 
 ## Startup wiring gotcha
 
@@ -199,5 +199,5 @@ app-created todos don't collide on the primary key.
 - `application.properties` + `data.sql` → in-memory H2, schema auto-created,
   three seed rows.
 
-See also: [`spring-security-notes.md`](./spring-security-notes.md) for the H2
+See also: [`spring-security-notes.md`](../security/spring-security-notes.md) for the H2
 console security exceptions.

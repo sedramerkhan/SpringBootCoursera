@@ -33,7 +33,7 @@ One dependency that bundles all the libraries needed for a task, pre-configured
 | `spring-boot-starter-test` | Testing toolkit — JUnit, Mockito, AssertJ |
 | `spring-boot-starter-data-jpa` | Database access via JPA (work with Java objects instead of raw SQL); bundles Hibernate + Spring Data |
 
-See also: [`dispatcher-servlet-notes.md`](./dispatcher-servlet-notes.md) for how
+See also: [`dispatcher-servlet-notes.md`](../web/dispatcher-servlet-notes.md) for how
 Spring MVC routes a request once it reaches the app, and
 [`auto-configuration-notes.md`](./auto-configuration-notes.md) for how the
 starters' beans get auto-wired.

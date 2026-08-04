@@ -162,4 +162,4 @@ gets its dependencies as parameters.
   Security owns `POST /login` and `POST /logout`.
 - `TodoController` reads the username from a `Principal` parameter instead of a
   session attribute — superseding the approach in
-  [`session-attributes-notes.md`](./session-attributes-notes.md).
+  [`session-attributes-notes.md`](../web/session-attributes-notes.md).

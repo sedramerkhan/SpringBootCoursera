@@ -13,51 +13,74 @@ working through each course, grouped by course below.
 - [Gradle](docs/build-tools/gradle-notes.md) — the Maven alternative: `build.gradle` vs
   `settings.gradle`, the Java/Spring Boot plugins, why its DSL and incremental
   builds are faster, and a Maven-vs-Gradle comparison.
-- [Spring vs Spring MVC vs Spring Boot](docs/spring-boot/spring-stack-notes.md) — how the
+
+All Spring Boot notes are grouped under
+**[docs/spring-boot/](docs/spring-boot/README.md)** — the hub links the four
+areas below.
+
+**[Core](docs/spring-boot/core/README.md)** — the IoC container and the machinery
+around it:
+
+- [Spring vs Spring MVC vs Spring Boot](docs/spring-boot/core/spring-stack-notes.md) — how the
   three layers relate (core IoC container → web module → auto-configured
   turnkey assembly) and the Starters that bundle them.
-- [Spring Beans](docs/spring-boot/beans-notes.md) — what a "bean" is: an object whose
+- [Spring Beans](docs/spring-boot/core/beans-notes.md) — what a "bean" is: an object whose
   lifecycle Spring manages and injects for you (IoC) — plus why DI pays off:
   programming to an interface to swap implementations (e.g. a new payment
   method, or cache vs. remote data source) without touching the consumers.
-- [Auto-Configuration](docs/spring-boot/auto-configuration-notes.md) — how Spring Boot
+- [Auto-Configuration](docs/spring-boot/core/auto-configuration-notes.md) — how Spring Boot
   auto-wires beans, where the configs live, and the `@Conditional...` rules
   that activate them.
-- [DispatcherServlet & Request Flow](docs/spring-boot/dispatcher-servlet-notes.md) — how an
+- [@ConfigurationProperties](docs/spring-boot/core/configuration-properties-notes.md) — binding a
+  group of external properties onto a typed config class by prefix.
+- [Profiles](docs/spring-boot/core/profiles-notes.md) — environment-specific configuration
+  (dev/test/prod) via profile files and `@Profile` beans.
+- [DevTools](docs/spring-boot/core/devtools-notes.md) — automatic application restart on code or
+  property changes during development.
+- [Actuator](docs/spring-boot/core/actuator-notes.md) — production-ready monitoring endpoints
+  (health, metrics, env…) and how to expose them.
+
+**[Web / MVC](docs/spring-boot/web/README.md)** — the request/response layer:
+
+- [DispatcherServlet & Request Flow](docs/spring-boot/web/dispatcher-servlet-notes.md) — how an
   HTTP request travels through the front controller to your controller and back.
-- [@Controller vs @RestController & JSON](docs/spring-boot/rest-controller-json-notes.md) —
+- [@Controller vs @RestController & JSON](docs/spring-boot/web/rest-controller-json-notes.md) —
   view names vs. response bodies, why `@RestController` drops `@ResponseBody`, and
   how Jackson serializes a returned bean/list to JSON automatically.
-- [DevTools](docs/spring-boot/devtools-notes.md) — automatic application restart on code or
-  property changes during development.
-- [Profiles](docs/spring-boot/profiles-notes.md) — environment-specific configuration
-  (dev/test/prod) via profile files and `@Profile` beans.
-- [@ConfigurationProperties](docs/spring-boot/configuration-properties-notes.md) — binding a
-  group of external properties onto a typed config class by prefix.
-- [Actuator](docs/spring-boot/actuator-notes.md) — production-ready monitoring endpoints
-  (health, metrics, env…) and how to expose them.
-- [JSP & View Resolver](docs/spring-boot/jsp-notes.md) — server-rendered HTML views: how a
+- [JSP & View Resolver](docs/spring-boot/web/jsp-notes.md) — server-rendered HTML views: how a
   controller returns a view name and the resolver's prefix/suffix turn it into a
   JSP file.
-- [Spring MVC Forms](docs/spring-boot/spring-mvc-forms-notes.md) — command beans, two-way
+- [Spring MVC Forms](docs/spring-boot/web/spring-mvc-forms-notes.md) — command beans, two-way
   binding with the `<form:…>` tags, and server-side validation (`@Valid`,
   `@Size`, `BindingResult`, `<form:errors>`) — plus the Kotlin specifics.
-- [Model & @SessionAttributes](docs/spring-boot/session-attributes-notes.md) — passing data
+- [Model & @SessionAttributes](docs/spring-boot/web/session-attributes-notes.md) — passing data
   controller → view via the request-scoped `Model`, and keeping a value (the
   logged-in name) across requests with `@SessionAttributes` / `@SessionAttribute`.
-- [Spring Security](docs/spring-boot/spring-security-notes.md) — authentication and
-  authorization with `spring-boot-starter-security`: an in-memory user, BCrypt
-  password hashing, URL rules and form login/logout, CSRF tokens, and the
-  dispatcher-type fix for JSP forwards.
-- [JPA, Spring Data JPA & H2](docs/spring-boot/jpa-h2-notes.md) — storing todos in a database
+
+**[Persistence](docs/spring-boot/persistence/README.md)** — storing and reading data:
+
+- [Object-Relational Mapping (ORM)](docs/spring-boot/persistence/orm-notes.md) — the concept
+  behind JPA: the object-relational impedance mismatch ORM bridges, its
+  benefits (less boilerplate, portability, maintainability, OO approach), the
+  five configuration pieces (dependencies, `@Entity` classes, persistence
+  unit, `EntityManager`, transactions), plain JPA vs. what Spring Boot
+  auto-configures, and trade-offs (N+1, when to still drop to SQL).
+- [JPA, Spring Data JPA & H2](docs/spring-boot/persistence/jpa-h2-notes.md) — storing todos in a database
   with little/no SQL: the JDBC → Spring JDBC → JPA → Spring Data JPA evolution,
   `@Entity` mapping, a `JpaRepository` with derived queries, a `CommandLineRunner`
   that exercises the repo at startup, and when to use the in-memory H2 database
   (learning/tests vs. a real server DB).
-- [Spring Data REST](docs/spring-boot/spring-data-rest-notes.md) — auto-exposing a repository
+- [Spring Data REST](docs/spring-boot/persistence/spring-data-rest-notes.md) — auto-exposing a repository
   as a REST API (`/api/notes`) with no controller: the `Note` entity +
   `@RepositoryRestResource`, paging/sorting, the one-repository-per-entity gotcha,
   and keeping `TodoRepository` private via `detection-strategy=annotated`.
+
+**[Security](docs/spring-boot/security/README.md)** — authentication and authorization:
+
+- [Spring Security](docs/spring-boot/security/spring-security-notes.md) — authentication and
+  authorization with `spring-boot-starter-security`: an in-memory user, BCrypt
+  password hashing, URL rules and form login/logout, CSRF tokens, and the
+  dispatcher-type fix for JSP forwards.
 
 ### Modern API Development
 
@@ -196,6 +219,10 @@ src/main/resources/
 
 docs/                          # study notes (see above)
 ├── spring-boot/               # Spring Boot & Spring MVC concepts
+│   ├── core/                  #   IoC container, auto-config, profiles, actuator
+│   ├── web/                   #   DispatcherServlet, controllers, JSP, forms
+│   ├── persistence/           #   ORM, JPA, Spring Data JPA/REST
+│   └── security/              #   Spring Security
 ├── build-tools/               # Maven, Gradle
 ├── api/                       # framework-agnostic API topics
 ├── database/                  # the DB course: grouped notes

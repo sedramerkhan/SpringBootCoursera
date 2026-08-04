@@ -76,5 +76,5 @@ error handler configured by **`ErrorMvcAutoConfiguration`** — by default the
 4. REST → object becomes JSON; MVC → view name becomes HTML.
 5. Errors fall through to `ErrorMvcAutoConfiguration`'s handler.
 
-See also: [`auto-configuration-notes.md`](./auto-configuration-notes.md) for how
+See also: [`auto-configuration-notes.md`](../core/auto-configuration-notes.md) for how
 these components get auto-wired.
