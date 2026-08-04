@@ -1,71 +1,12 @@
 # JPA, Spring Data JPA & H2 — Notes
 
-How the app stores todos in a database with almost no SQL — and why we reach for
-each piece. The todo list moved from an in-memory `MutableList` to a real
-database table, but the controller and JSPs didn't change.
-
-## The evolution: JDBC → Spring JDBC → JPA → Spring Data JPA
-
-Each step exists to make you **write less code and less SQL**.
-
-| Approach | What you write | Pain |
-|---|---|---|
-| **JDBC** | SQL queries **+** tons of Java to execute them (connections, statements, result-set loops) | Thousands of lines of boilerplate just to run one query |
-| **Spring JDBC** | SQL queries + a little Java (`jdbcTemplate.update(sql, id)`) | Much less Java, but you **still write every query** |
-| **JPA** (e.g. Hibernate) | **No queries** — you map Java objects to tables with annotations; JPA generates the SQL | You still write the repository/`EntityManager` plumbing |
-| **Spring Data JPA** | **Almost nothing** — declare an interface; Spring implements CRUD for you | — |
-
-- **JDBC** — `Select * from ...`, open a connection, prepare a statement, loop
-  the result set, map columns to fields by hand. Powerful but enormous boilerplate.
-- **Spring JDBC** — a Spring module that keeps the SQL but slashes the Java:
-  `jdbcTemplate.update("delete from todo where id=?", id)`. Fetching got easier,
-  but you still hand-write every query (and most Java devs would rather not).
-- **JPA (Java Persistence API)** — a *specification*; **Hibernate** is the most
-  popular implementation. You **map** a Java class to a table with annotations
-  (`@Entity`, `@Id`, …) and JPA **generates the queries for you**. Code becomes
-  "find this entity by this id" — pure Java, no SQL.
-- **Spring Data JPA** — makes JPA even simpler. You define an **interface** that
-  extends `JpaRepository`; Spring writes the implementation at runtime. Insert,
-  read, update, delete — for free, no SQL, no boilerplate.
-
-**Bottom line:** we avoid SQL because it's error-prone boilerplate. JPA removes
-the queries (via mapping); Spring Data JPA removes the repository code too.
-
-## Abbreviations
-
-- **JDBC** — **J**ava **D**ata**b**ase **C**onnectivity.
-- **JPA** — **J**ava **P**ersistence **A**PI.
-
-## JPA vs Hibernate — the API vs its implementation
-
-**JPA is a specification (an API); Hibernate is the most popular implementation
-of it.** Think of JPA as an *interface* and Hibernate as one *class* that
-implements it (Toplink/EclipseLink is another).
-
-| | JPA | Hibernate |
-|---|---|---|
-| **What it is** | A specification / API — defines *how* to persist objects | A framework that *implements* that specification |
-| **Provides** | Annotations (`@Entity`, `@Id`, `@Column`), the `EntityManager` API, JPQL | The actual runtime that turns your mapped objects into SQL |
-| **Package** | `jakarta.persistence.*` | `org.hibernate.*` |
-| **Role** | Says *what* the contract is | Does *the work* behind the contract |
-
-- Both arrive via **one** dependency: `spring-boot-starter-data-jpa` pulls in the
-  JPA API jar (`jakarta.persistence-api`) **and** Hibernate (`hibernate-core`).
-  Check `mvn dependency:tree` / the IDE's Dependency Hierarchy to see both.
-- **Watch the imports.** In this project everything comes from
-  `jakarta.persistence.*` — e.g. `@Entity` is `jakarta.persistence.Entity`, not
-  `org.hibernate.annotations.Entity`. That means we code against **JPA** and let
-  Hibernate be the implementation underneath.
-- **Why avoid Hibernate annotations directly?** To not lock into Hibernate. If
-  you stick to the JPA API, you could swap the implementation (e.g. to
-  EclipseLink/Toplink) without rewriting your entities.
-
-> ⚠️ Some annotations exist in **both** packages (e.g. `@Entity`). When the IDE
-> offers `jakarta.persistence.Entity` *and* `org.hibernate.annotations.Entity`,
-> pick the `jakarta.persistence` one to stay on the standard API.
-
-**Takeaway:** always code to **JPA** (`jakarta.persistence.*`); use **Hibernate**
-as the implementation that runs it.
+How this project stores todos in a database with almost no SQL — and why we
+reach for each piece. The todo list moved from an in-memory `MutableList` to
+a real database table, but the controller and JSPs didn't change. For the
+general JPA/Hibernate/ORM concepts used here (JPA vs. Hibernate, entity
+relationships, JPQL, transactions, and more), see
+[`orm-notes.md`](./orm-notes.md) — this file covers only how they're wired
+into this specific project.
 
 ## How it looks in this project
 
@@ -142,7 +83,7 @@ Notes:
   the app; ignore them if unused.
 - We use a throwaway `"demo"` username so these rows don't appear for a logged-in
   user in the UI.
-- See [`TodoDataRunner`](../src/main/java/com/sm/coursera/todo/TodoDataRunner.kt)
+- See [`TodoDataRunner`](../../../src/main/java/com/sm/coursera/todo/TodoDataRunner.kt)
   in this project — watch its `INFO` lines in the console at startup.
 
 ## What is H2, and when should I use it?
@@ -199,5 +140,9 @@ app-created todos don't collide on the primary key.
 - `application.properties` + `data.sql` → in-memory H2, schema auto-created,
   three seed rows.
 
-See also: [`spring-security-notes.md`](../security/spring-security-notes.md) for the H2
-console security exceptions.
+See also:
+- [`orm-notes.md`](./orm-notes.md) — the general JPA/Hibernate/ORM concepts
+  behind this setup: JPA vs. Hibernate, entity relationships & cascading,
+  field-mapping annotations, JPQL, and transactions.
+- [`spring-security-notes.md`](../security/spring-security-notes.md) — the H2
+  console security exceptions.
